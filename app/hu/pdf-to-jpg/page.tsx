@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import { Shield, Zap, Lock } from "lucide-react"
 import { HeaderHu } from "@/components/header-hu"
 import { FooterHu } from "@/components/footer-hu"
-import { PDFToImageConverter } from "@/components/pdf-to-image-converter"
+import { PdfToImageConverter } from "@/components/pdf-to-image-converter"
 
 export const metadata: Metadata = {
   title: "PDF JPG-be Konvertáló - Ingyenes Online Eszköz | SnapConvert",
@@ -47,7 +47,7 @@ export default function PdfToJpgPageHu() {
           </div>
 
           <div className="mt-10 w-full max-w-3xl">
-            <PDFToImageConverter outputFormat="jpeg" outputLabel="JPG" />
+            <PdfToImageConverter outputFormat="jpeg" outputLabel="JPG" />
           </div>
         </section>
 
