@@ -2,39 +2,7 @@
 
 import { ArrowRight, ChevronDown, Menu, X, FileImage } from "lucide-react"
 import { useState } from "react"
-
-const pdfTools = [
-  { name: "Image to PDF", href: "/image-to-pdf" },
-  { name: "JPG to PDF", href: "/jpg-to-pdf" },
-  { name: "PNG to PDF", href: "/png-to-pdf" },
-  { name: "WEBP to PDF", href: "/webp-to-pdf" },
-  { name: "HEIC to PDF", href: "/heic-to-pdf" },
-  { name: "PDF to JPG", href: "/pdf-to-jpg" },
-  { name: "PDF to PNG", href: "/pdf-to-png" },
-]
-
-const imageTools = [
-  { name: "Image to JPG", href: "/image-to-jpg" },
-  { name: "Image to PNG", href: "/image-to-png" },
-  { name: "Image to Text (OCR)", href: "/image-to-text" },
-  { name: "PNG to JPG", href: "/png-to-jpg" },
-  { name: "JPG to PNG", href: "/jpg-to-png" },
-  { name: "WEBP to JPG", href: "/webp-to-jpg" },
-  { name: "WEBP to PNG", href: "/webp-to-png" },
-  { name: "WEBP to GIF", href: "/webp-to-gif" },
-  { name: "HEIC to JPG", href: "/heic-to-jpg" },
-  { name: "HEIC to PNG", href: "/heic-to-png" },
-  { name: "SVG to PNG", href: "/svg-to-png" },
-  { name: "SVG to JPG", href: "/svg-to-jpg" },
-  { name: "BMP to JPG", href: "/bmp-to-jpg" },
-  { name: "BMP to PNG", href: "/bmp-to-png" },
-  { name: "GIF to JPG", href: "/gif-to-jpg" },
-  { name: "GIF to PNG", href: "/gif-to-png" },
-  { name: "TIFF to JPG", href: "/tiff-to-jpg" },
-  { name: "TIFF to PNG", href: "/tiff-to-png" },
-  { name: "Image Compressor", href: "/image-compressor" },
-  { name: "Image Resizer", href: "/image-resizer" },
-]
+import { toolCategories } from "@/lib/tools-config"
 
 export function UnifiedHeader() {
   const [isToolsOpen, setIsToolsOpen] = useState(false)
@@ -71,40 +39,28 @@ export function UnifiedHeader() {
             </a>
             
             {isToolsOpen && (
-              <div className="absolute top-full left-0 mt-2 w-[500px] rounded-lg border border-border bg-card shadow-lg py-2">
-                <div className="grid grid-cols-2 gap-4 p-4">
-                  <div>
-                    <div className="px-1 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      PDF Tools
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[700px] rounded-lg border border-border bg-card shadow-lg py-4">
+                <div className="grid grid-cols-5 gap-4 px-4">
+                  {toolCategories.map((category) => (
+                    <div key={category.id}>
+                      <div className="px-1 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                        {category.shortTitle}
+                      </div>
+                      <div className="max-h-[280px] overflow-y-auto">
+                        {category.tools.map((tool) => (
+                          <a
+                            key={tool.href}
+                            href={tool.href}
+                            className="block px-1 py-1.5 text-sm text-foreground hover:text-primary transition-colors"
+                          >
+                            {tool.name}
+                          </a>
+                        ))}
+                      </div>
                     </div>
-                    {pdfTools.map((tool) => (
-                      <a
-                        key={tool.href}
-                        href={tool.href}
-                        className="block px-1 py-1.5 text-sm text-foreground hover:text-primary transition-colors"
-                      >
-                        {tool.name}
-                      </a>
-                    ))}
-                  </div>
-                  <div>
-                    <div className="px-1 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Image Tools
-                    </div>
-                    <div className="max-h-[300px] overflow-y-auto">
-                      {imageTools.map((tool) => (
-                        <a
-                          key={tool.href}
-                          href={tool.href}
-                          className="block px-1 py-1.5 text-sm text-foreground hover:text-primary transition-colors"
-                        >
-                          {tool.name}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
+                  ))}
                 </div>
-                <div className="border-t border-border mx-4 pt-3 pb-2">
+                <div className="border-t border-border mx-4 mt-3 pt-3">
                   <a
                     href="/tools"
                     className="flex items-center justify-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
@@ -139,42 +95,27 @@ export function UnifiedHeader() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-border bg-background">
+        <div className="md:hidden border-t border-border bg-background max-h-[80vh] overflow-y-auto">
           <div className="px-4 py-4 space-y-4">
-            <div>
-              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-                PDF Tools
+            {toolCategories.map((category) => (
+              <div key={category.id}>
+                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+                  {category.shortTitle}
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {category.tools.map((tool) => (
+                    <a
+                      key={tool.href}
+                      href={tool.href}
+                      className="text-sm text-foreground hover:text-primary transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {tool.name}
+                    </a>
+                  ))}
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                {pdfTools.map((tool) => (
-                  <a
-                    key={tool.href}
-                    href={tool.href}
-                    className="text-sm text-foreground hover:text-primary transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {tool.name}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-                Image Tools
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {imageTools.map((tool) => (
-                  <a
-                    key={tool.href}
-                    href={tool.href}
-                    className="text-sm text-foreground hover:text-primary transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {tool.name}
-                  </a>
-                ))}
-              </div>
-            </div>
+            ))}
             <div className="border-t border-border pt-4">
               <a
                 href="/tools"

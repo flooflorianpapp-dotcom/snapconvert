@@ -1,48 +1,34 @@
 "use client"
 
 import { FileImage } from "lucide-react"
-
-const pdfTools = [
-  { name: "Image to PDF", href: "/image-to-pdf" },
-  { name: "JPG to PDF", href: "/jpg-to-pdf" },
-  { name: "PNG to PDF", href: "/png-to-pdf" },
-  { name: "WEBP to PDF", href: "/webp-to-pdf" },
-  { name: "HEIC to PDF", href: "/heic-to-pdf" },
-  { name: "PDF to JPG", href: "/pdf-to-jpg" },
-  { name: "PDF to PNG", href: "/pdf-to-png" },
-]
-
-const imageConverters = [
-  { name: "Image to JPG", href: "/image-to-jpg" },
-  { name: "Image to PNG", href: "/image-to-png" },
-  { name: "PNG to JPG", href: "/png-to-jpg" },
-  { name: "JPG to PNG", href: "/jpg-to-png" },
-  { name: "WEBP to JPG", href: "/webp-to-jpg" },
-  { name: "WEBP to PNG", href: "/webp-to-png" },
-  { name: "HEIC to JPG", href: "/heic-to-jpg" },
-  { name: "HEIC to PNG", href: "/heic-to-png" },
-]
-
-const moreConverters = [
-  { name: "SVG to PNG", href: "/svg-to-png" },
-  { name: "SVG to JPG", href: "/svg-to-jpg" },
-  { name: "BMP to JPG", href: "/bmp-to-jpg" },
-  { name: "BMP to PNG", href: "/bmp-to-png" },
-  { name: "GIF to JPG", href: "/gif-to-jpg" },
-  { name: "GIF to PNG", href: "/gif-to-png" },
-  { name: "TIFF to JPG", href: "/tiff-to-jpg" },
-  { name: "TIFF to PNG", href: "/tiff-to-png" },
-  { name: "WEBP to GIF", href: "/webp-to-gif" },
-]
-
-const utilityTools = [
-  { name: "Image Compressor", href: "/image-compressor" },
-  { name: "Image Resizer", href: "/image-resizer" },
-  { name: "Image to Text (OCR)", href: "/image-to-text" },
-]
+import { toolCategories } from "@/lib/tools-config"
 
 export function UnifiedFooter() {
   const currentYear = new Date().getFullYear()
+
+  // Get specific categories for footer layout
+  const imageToPdf = toolCategories.find(c => c.id === "image-to-pdf")
+  const pdfConverters = toolCategories.find(c => c.id === "pdf-converters")
+  const imageConverters = toolCategories.find(c => c.id === "image-converters")
+  const utilities = toolCategories.find(c => c.id === "image-utilities")
+  const textExtraction = toolCategories.find(c => c.id === "text-extraction")
+
+  // Combine PDF-related tools
+  const pdfTools = [
+    ...(imageToPdf?.tools || []),
+    ...(pdfConverters?.tools || []),
+  ]
+
+  // Split image converters for better layout
+  const imageConvertersList = imageConverters?.tools || []
+  const firstHalf = imageConvertersList.slice(0, 8)
+  const secondHalf = imageConvertersList.slice(8)
+
+  // Combine utilities and OCR
+  const utilityAndOcrTools = [
+    ...(utilities?.tools || []),
+    ...(textExtraction?.tools || []),
+  ]
 
   return (
     <footer className="border-t border-border bg-background">
@@ -77,7 +63,7 @@ export function UnifiedFooter() {
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-3">Image Converters</h3>
             <ul className="space-y-2">
-              {imageConverters.map((tool) => (
+              {firstHalf.map((tool) => (
                 <li key={tool.href}>
                   <a 
                     href={tool.href} 
@@ -93,7 +79,7 @@ export function UnifiedFooter() {
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-3">More Converters</h3>
             <ul className="space-y-2">
-              {moreConverters.map((tool) => (
+              {secondHalf.map((tool) => (
                 <li key={tool.href}>
                   <a 
                     href={tool.href} 
@@ -107,9 +93,9 @@ export function UnifiedFooter() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-3">Utilities</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-3">Utilities & OCR</h3>
             <ul className="space-y-2">
-              {utilityTools.map((tool) => (
+              {utilityAndOcrTools.map((tool) => (
                 <li key={tool.href}>
                   <a 
                     href={tool.href} 
@@ -122,6 +108,14 @@ export function UnifiedFooter() {
             </ul>
             <h3 className="text-sm font-semibold text-foreground mt-6 mb-3">Resources</h3>
             <ul className="space-y-2">
+              <li>
+                <a 
+                  href="/tools" 
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  All Tools
+                </a>
+              </li>
               <li>
                 <a 
                   href="/#how-it-works" 
