@@ -1,44 +1,45 @@
 import { FileImage, Globe } from "lucide-react"
+import { getToolName } from "@/lib/i18n"
 
 const pdfTools = [
-  { name: "Image to PDF", href: "/image-to-pdf" },
-  { name: "JPG to PDF", href: "/jpg-to-pdf" },
-  { name: "PNG to PDF", href: "/png-to-pdf" },
-  { name: "WEBP to PDF", href: "/webp-to-pdf" },
-  { name: "HEIC to PDF", href: "/heic-to-pdf" },
-  { name: "PDF to JPG", href: "/pdf-to-jpg" },
-  { name: "PDF to PNG", href: "/pdf-to-png" },
+  { name: "Image to PDF", href: "/hu/image-to-pdf" },
+  { name: "JPG to PDF", href: "/hu/jpg-to-pdf" },
+  { name: "PNG to PDF", href: "/hu/png-to-pdf" },
+  { name: "WEBP to PDF", href: "/hu/webp-to-pdf" },
+  { name: "HEIC to PDF", href: "/hu/heic-to-pdf" },
+  { name: "PDF to JPG", href: "/hu/pdf-to-jpg" },
+  { name: "PDF to PNG", href: "/hu/pdf-to-png" },
 ]
 
 const imageConverters = [
-  { name: "Image to JPG", href: "/image-to-jpg" },
-  { name: "Image to PNG", href: "/image-to-png" },
-  { name: "PNG to JPG", href: "/png-to-jpg" },
-  { name: "JPG to PNG", href: "/jpg-to-png" },
-  { name: "WEBP to JPG", href: "/webp-to-jpg" },
-  { name: "WEBP to PNG", href: "/webp-to-png" },
-  { name: "HEIC to JPG", href: "/heic-to-jpg" },
-  { name: "HEIC to PNG", href: "/heic-to-png" },
+  { name: "Image to JPG", href: "/hu/image-to-jpg" },
+  { name: "Image to PNG", href: "/hu/image-to-png" },
+  { name: "PNG to JPG", href: "/hu/png-to-jpg" },
+  { name: "JPG to PNG", href: "/hu/jpg-to-png" },
+  { name: "WEBP to JPG", href: "/hu/webp-to-jpg" },
+  { name: "WEBP to PNG", href: "/hu/webp-to-png" },
+  { name: "HEIC to JPG", href: "/hu/heic-to-jpg" },
+  { name: "HEIC to PNG", href: "/hu/heic-to-png" },
 ]
 
 const moreConverters = [
-  { name: "SVG to PNG", href: "/svg-to-png" },
-  { name: "SVG to JPG", href: "/svg-to-jpg" },
-  { name: "BMP to JPG", href: "/bmp-to-jpg" },
-  { name: "BMP to PNG", href: "/bmp-to-png" },
-  { name: "GIF to JPG", href: "/gif-to-jpg" },
-  { name: "GIF to PNG", href: "/gif-to-png" },
-  { name: "TIFF to JPG", href: "/tiff-to-jpg" },
-  { name: "TIFF to PNG", href: "/tiff-to-png" },
-  { name: "WEBP to GIF", href: "/webp-to-gif" },
+  { name: "SVG to PNG", href: "/hu/svg-to-png" },
+  { name: "SVG to JPG", href: "/hu/svg-to-jpg" },
+  { name: "BMP to JPG", href: "/hu/bmp-to-jpg" },
+  { name: "BMP to PNG", href: "/hu/bmp-to-png" },
+  { name: "GIF to JPG", href: "/hu/gif-to-jpg" },
+  { name: "GIF to PNG", href: "/hu/gif-to-png" },
+  { name: "TIFF to JPG", href: "/hu/tiff-to-jpg" },
+  { name: "TIFF to PNG", href: "/hu/tiff-to-png" },
+  { name: "WEBP to GIF", href: "/hu/webp-to-gif" },
 ]
 
 const utilityTools = [
-  { name: "Image Compressor", href: "/image-compressor" },
-  { name: "Image Resizer", href: "/image-resizer" },
+  { name: "Image Compressor", href: "/hu/image-compressor" },
+  { name: "Image Resizer", href: "/hu/image-resizer" },
 ]
 
-export function Footer() {
+export function FooterHu() {
   const currentYear = new Date().getFullYear()
 
   return (
@@ -51,24 +52,24 @@ export function Footer() {
               <span className="font-semibold text-foreground">SnapConvert</span>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              Free online image converter tools. Fast, secure, and private.
+              Ingyenes online képkonvertáló eszközök. Gyors, biztonságos és privát.
             </p>
             {/* Language Switcher */}
             <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
               <Globe className="h-4 w-4" />
-              <a href="/" className="text-primary font-medium">EN</a>
+              <a href="/" className="hover:text-foreground transition-colors">EN</a>
               <span>|</span>
-              <a href="/hu" className="hover:text-foreground transition-colors">HU</a>
+              <a href="/hu" className="text-primary font-medium">HU</a>
             </div>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-3">PDF Tools</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-3">PDF Eszközök</h3>
             <ul className="space-y-2">
               {pdfTools.map((tool) => (
                 <li key={tool.href}>
                   <a href={tool.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {tool.name}
+                    {getToolName(tool.name, 'hu')}
                   </a>
                 </li>
               ))}
@@ -76,12 +77,12 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-3">Image Converters</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-3">Képkonvertálók</h3>
             <ul className="space-y-2">
               {imageConverters.map((tool) => (
                 <li key={tool.href}>
                   <a href={tool.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {tool.name}
+                    {getToolName(tool.name, 'hu')}
                   </a>
                 </li>
               ))}
@@ -89,12 +90,12 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-3">More Converters</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-3">További Konvertálók</h3>
             <ul className="space-y-2">
               {moreConverters.map((tool) => (
                 <li key={tool.href}>
                   <a href={tool.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {tool.name}
+                    {getToolName(tool.name, 'hu')}
                   </a>
                 </li>
               ))}
@@ -102,26 +103,26 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-3">Utilities</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-3">Segédeszközök</h3>
             <ul className="space-y-2">
               {utilityTools.map((tool) => (
                 <li key={tool.href}>
                   <a href={tool.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {tool.name}
+                    {getToolName(tool.name, 'hu')}
                   </a>
                 </li>
               ))}
             </ul>
-            <h3 className="text-sm font-semibold text-foreground mt-6 mb-3">Resources</h3>
+            <h3 className="text-sm font-semibold text-foreground mt-6 mb-3">Források</h3>
             <ul className="space-y-2">
               <li>
-                <a href="/#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  How It Works
+                <a href="/hu#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Hogyan Működik
                 </a>
               </li>
               <li>
-                <a href="/#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  FAQ
+                <a href="/hu#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  GYIK
                 </a>
               </li>
             </ul>
@@ -130,7 +131,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-border pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            {currentYear} SnapConvert. All rights reserved.
+            {currentYear} SnapConvert. Minden jog fenntartva.
           </p>
         </div>
       </div>
