@@ -1,12 +1,55 @@
 "use client"
 
-import { ArrowRight, ChevronDown, Menu, X, FileImage } from "lucide-react"
+import { ArrowRight, ChevronDown, Menu, X, FileImage, Sparkles, Image, FileText, ScanText } from "lucide-react"
 import { useState } from "react"
-import { toolCategories } from "@/lib/tools-config"
+
+// Curated tools for the header dropdown - only show the most important tools
+// Full list remains on /tools page via tools-config.ts
+const curatedTools = {
+  popular: {
+    title: "Popular",
+    icon: Sparkles,
+    tools: [
+      { name: "Image to PDF", href: "/image-to-pdf" },
+      { name: "PDF to JPG", href: "/pdf-to-jpg" },
+      { name: "PNG to JPG", href: "/png-to-jpg" },
+      { name: "Compress PDF", href: "/compress-pdf" },
+    ],
+  },
+  image: {
+    title: "Image Tools",
+    icon: Image,
+    tools: [
+      { name: "Image Compressor", href: "/image-compressor" },
+      { name: "Image Resizer", href: "/image-resizer" },
+      { name: "JPG to PNG", href: "/jpg-to-png" },
+      { name: "HEIC to JPG", href: "/heic-to-jpg" },
+    ],
+  },
+  pdf: {
+    title: "PDF Tools",
+    icon: FileText,
+    tools: [
+      { name: "Merge PDF", href: "/merge-pdf" },
+      { name: "PDF to PNG", href: "/pdf-to-png" },
+      { name: "JPG to PDF", href: "/jpg-to-pdf" },
+      { name: "PNG to PDF", href: "/png-to-pdf" },
+    ],
+  },
+  ocr: {
+    title: "OCR Tools",
+    icon: ScanText,
+    tools: [
+      { name: "Image to Text", href: "/image-to-text" },
+    ],
+  },
+}
 
 export function UnifiedHeader() {
   const [isToolsOpen, setIsToolsOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const categories = Object.values(curatedTools)
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
@@ -31,36 +74,35 @@ export function UnifiedHeader() {
               <ChevronDown className={`h-4 w-4 transition-transform ${isToolsOpen ? "rotate-180" : ""}`} />
             </button>
             
-            <a
-              href="/tools"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-full focus:mt-2 focus:rounded focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
-            >
-              View All Tools
-            </a>
-            
             {isToolsOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[700px] rounded-lg border border-border bg-card shadow-lg py-4">
-                <div className="grid grid-cols-5 gap-4 px-4">
-                  {toolCategories.map((category) => (
-                    <div key={category.id}>
-                      <div className="px-1 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        {category.shortTitle}
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] rounded-lg border border-border bg-card shadow-lg p-4">
+                <div className="grid grid-cols-4 gap-6">
+                  {categories.map((category) => {
+                    const IconComponent = category.icon
+                    return (
+                      <div key={category.title}>
+                        <div className="flex items-center gap-1.5 mb-3">
+                          <IconComponent className="h-3.5 w-3.5 text-primary" />
+                          <span className="text-xs font-semibold text-foreground uppercase tracking-wide">
+                            {category.title}
+                          </span>
+                        </div>
+                        <div className="space-y-1">
+                          {category.tools.map((tool) => (
+                            <a
+                              key={tool.href}
+                              href={tool.href}
+                              className="block py-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                              {tool.name}
+                            </a>
+                          ))}
+                        </div>
                       </div>
-                      <div className="max-h-[280px] overflow-y-auto">
-                        {category.tools.map((tool) => (
-                          <a
-                            key={tool.href}
-                            href={tool.href}
-                            className="block px-1 py-1.5 text-sm text-foreground hover:text-primary transition-colors"
-                          >
-                            {tool.name}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
-                <div className="border-t border-border mx-4 mt-3 pt-3">
+                <div className="border-t border-border mt-4 pt-3">
                   <a
                     href="/tools"
                     className="flex items-center justify-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
@@ -88,6 +130,7 @@ export function UnifiedHeader() {
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="md:hidden p-2 text-muted-foreground hover:text-foreground"
+          aria-label="Toggle menu"
         >
           {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -95,37 +138,45 @@ export function UnifiedHeader() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-border bg-background max-h-[80vh] overflow-y-auto">
-          <div className="px-4 py-4 space-y-4">
-            {toolCategories.map((category) => (
-              <div key={category.id}>
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-                  {category.shortTitle}
+        <div className="md:hidden border-t border-border bg-background">
+          <div className="px-4 py-4 space-y-5">
+            {categories.map((category) => {
+              const IconComponent = category.icon
+              return (
+                <div key={category.title}>
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <IconComponent className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-xs font-semibold text-foreground uppercase tracking-wide">
+                      {category.title}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                    {category.tools.map((tool) => (
+                      <a
+                        key={tool.href}
+                        href={tool.href}
+                        className="py-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {tool.name}
+                      </a>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {category.tools.map((tool) => (
-                    <a
-                      key={tool.href}
-                      href={tool.href}
-                      className="text-sm text-foreground hover:text-primary transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {tool.name}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ))}
+              )
+            })}
+            
             <div className="border-t border-border pt-4">
               <a
                 href="/tools"
-                className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors mb-4"
+                className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 View All Tools
                 <ArrowRight className="h-4 w-4" />
               </a>
             </div>
+            
             <div className="border-t border-border pt-4 space-y-2">
               <a
                 href="/#how-it-works"
