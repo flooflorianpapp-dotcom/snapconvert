@@ -1,6 +1,6 @@
 import { UnifiedHeader } from "@/components/unified-header"
 import { UnifiedFooter } from "@/components/unified-footer"
-import { ArrowRight, FileImage, FileType, Image, Maximize, Minimize } from "lucide-react"
+import { ArrowRight, FileImage, FileType, Image, Maximize, FileText } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -160,6 +160,14 @@ const imageUtilities = [
   },
 ]
 
+const textTools = [
+  {
+    name: "Image to Text (OCR)",
+    description: "Extract text from images using optical character recognition",
+    href: "/image-to-text",
+  },
+]
+
 interface ToolCardProps {
   name: string
   description: string
@@ -258,6 +266,15 @@ export default function ToolsPage() {
             description="Optimize and resize your images for any use case."
             icon={<Maximize className="h-5 w-5" />}
             tools={imageUtilities}
+          />
+
+          <div className="border-t border-border" />
+
+          <ToolSection
+            title="Text Extraction"
+            description="Extract text from images using OCR technology."
+            icon={<FileText className="h-5 w-5" />}
+            tools={textTools}
           />
         </div>
       </div>

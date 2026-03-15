@@ -16,6 +16,7 @@ const pdfTools = [
 const imageTools = [
   { name: "Image to JPG", href: "/image-to-jpg" },
   { name: "Image to PNG", href: "/image-to-png" },
+  { name: "Image to Text (OCR)", href: "/image-to-text" },
   { name: "PNG to JPG", href: "/png-to-jpg" },
   { name: "JPG to PNG", href: "/jpg-to-png" },
   { name: "WEBP to JPG", href: "/webp-to-jpg" },

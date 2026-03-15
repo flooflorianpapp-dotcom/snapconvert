@@ -38,6 +38,7 @@ const moreConverters = [
 const utilityTools = [
   { name: "Image Compressor", href: "/image-compressor" },
   { name: "Image Resizer", href: "/image-resizer" },
+  { name: "Image to Text (OCR)", href: "/image-to-text" },
 ]
 
 export function UnifiedFooter() {
