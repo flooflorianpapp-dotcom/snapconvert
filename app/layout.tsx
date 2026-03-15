@@ -40,9 +40,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-   <html lang="en">
-  <head><meta name="google-adsense-account" content="ca-pub-7074188379523382"></head>
-
+<html lang="en">
+  <head>
+    <meta
+      name="google-adsense-account"
+      content="ca-pub-7074188379523382"
+    />
+  </head>
   <body className="font-sans antialiased">
     {children}
     <Analytics />
