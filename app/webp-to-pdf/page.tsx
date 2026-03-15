@@ -120,6 +120,45 @@ export default function WebpToPdfPage() {
         </section>
 
         <FormatFAQ formatName="WEBP" formatExtension=".webp" />
+
+        {/* SEO Content Section */}
+        <section className="px-4 py-16 sm:py-24 border-t border-border">
+          <div className="mx-auto max-w-4xl">
+            <div className="prose prose-gray dark:prose-invert max-w-none">
+              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl mb-6">
+                Free WEBP to PDF Converter Online
+              </h2>
+              
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                Convert WEBP images to PDF documents with our free online tool. WEBP is Google's modern image format optimized for web delivery, but when you need to create professional documents, share images as attachments, or archive your photos in a universal format, PDF is the ideal choice. Our converter transforms your WEBP images into high-quality PDF documents that can be viewed, printed, and shared on any device.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                Why Convert WEBP to PDF
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                PDF is the universal standard for document sharing, offering guaranteed compatibility across all operating systems, devices, and applications. Converting WEBP images to PDF is perfect for creating professional portfolios, preparing images for printing, combining multiple images into a single document, or archiving photos in a format that will remain accessible for decades. PDF documents maintain consistent appearance regardless of the viewing device, making them ideal for professional and formal use cases.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                How Our WEBP to PDF Converter Works
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Our converter processes your WEBP files directly in your browser, ensuring your images remain private and secure. Upload single or multiple WEBP images, and our tool will convert them into a well-formatted PDF document while preserving the original image quality and resolution. The resulting PDF is optimized for both screen viewing and high-quality printing. All processing happens locally on your device, so your files are never uploaded to any server.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                About WEBP Format
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                WEBP was developed by Google as a modern image format specifically designed for the web. It uses advanced compression techniques that can reduce image file sizes by 25-35% compared to JPG and PNG at equivalent visual quality. WEBP supports both lossy and lossless compression, transparency (alpha channel), and even animation. While WEBP is excellent for web delivery and is supported by all major browsers, its limited support in traditional applications and print workflows makes conversion to PDF valuable for professional and archival use.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>

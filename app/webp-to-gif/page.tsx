@@ -118,6 +118,45 @@ export default function WebpToGifPage() {
         </section>
 
         <FormatFAQ formatName="WEBP to GIF" formatExtension=".webp" />
+
+        {/* SEO Content Section */}
+        <section className="px-4 py-16 sm:py-24 border-t border-border">
+          <div className="mx-auto max-w-4xl">
+            <div className="prose prose-gray dark:prose-invert max-w-none">
+              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl mb-6">
+                Free WEBP to GIF Converter Online
+              </h2>
+              
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                Convert WEBP images to GIF format with our free online tool. While animated WEBP offers superior compression, GIF remains the universal standard for animated images with near-total compatibility across all platforms, devices, and applications. Our WEBP to GIF converter helps you share your animations on platforms that don't yet support the WEBP format, ensuring your content displays correctly everywhere.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                When to Convert WEBP to GIF
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Converting WEBP to GIF is essential when sharing animations on platforms with limited WEBP support. While modern web browsers support WEBP, many social media platforms, messaging apps, forum software, and email clients may not display WEBP animations correctly. GIF, despite being an older format, is universally supported and will play correctly virtually anywhere. Convert WEBP to GIF when sharing animations via email, posting on forums or community sites, using in presentations, or any situation where maximum compatibility is required.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                How Our WEBP to GIF Converter Works
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Our browser-based converter processes your WEBP files directly on your device. For static WEBP images, the converter creates a single-frame GIF. The conversion happens entirely in your browser, ensuring your files remain private and the process is fast regardless of your internet connection speed. Simply upload your WEBP file, and download the converted GIF in seconds.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                WEBP vs GIF: Understanding Animation Formats
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                WEBP animations offer significantly better compression than GIF, often 50-90% smaller at equivalent quality, with support for millions of colors. GIF is limited to 256 colors per frame and uses an older compression algorithm, resulting in larger files. However, GIF's universal compatibility—it works everywhere, from ancient browsers to modern apps—makes it indispensable for sharing. While WEBP is technically superior, GIF's ubiquity means it remains the safer choice for broad distribution of animated content.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>

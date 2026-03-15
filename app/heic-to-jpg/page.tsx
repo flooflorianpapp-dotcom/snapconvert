@@ -1,10 +1,18 @@
 import { Metadata } from "next"
-import { Shield, Zap, Lock, Check } from "lucide-react"
+import { Shield, Zap, Lock } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { FormatConverter } from "@/components/format-converter"
-import { HowToConvert } from "@/components/how-to-convert"
-import { FormatFAQ } from "@/components/format-faq"
+import { 
+  HowItWorksSection, 
+  SupportedFormatsSection, 
+  WhySnapConvertSection, 
+  FormatBenefitsSection, 
+  FAQSection 
+} from "@/components/converter-seo-sections"
+import { converterConfigs } from "@/lib/converter-configs"
+
+const config = converterConfigs["heic-to-jpg"]
 
 export const metadata: Metadata = {
   title: "HEIC to JPG Converter - Free Online Tool | SnapConvert",
@@ -57,67 +65,11 @@ export default function HeicToJpgPage() {
           </div>
         </section>
 
-        <HowToConvert formatName="HEIC to JPG" />
-
-        <section className="px-4 py-16 sm:py-24">
-          <div className="mx-auto max-w-6xl">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                Why Convert HEIC to JPG?
-              </h2>
-              <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-                JPG is universally supported while HEIC is limited to Apple devices
-              </p>
-            </div>
-
-            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="text-xl font-semibold text-foreground">Universal Compatibility</h3>
-                <p className="mt-2 text-sm text-muted-foreground">HEIC only works on Apple devices, but JPG works everywhere.</p>
-                <ul className="mt-4 space-y-2">
-                  <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Check className="h-4 w-4 text-primary shrink-0" />
-                    Works on Windows
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Check className="h-4 w-4 text-primary shrink-0" />
-                    Works on Android
-                  </li>
-                </ul>
-              </div>
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="text-xl font-semibold text-foreground">Easy Sharing</h3>
-                <p className="mt-2 text-sm text-muted-foreground">Share your iPhone photos on any platform or social media.</p>
-                <ul className="mt-4 space-y-2">
-                  <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Check className="h-4 w-4 text-primary shrink-0" />
-                    Email friendly
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Check className="h-4 w-4 text-primary shrink-0" />
-                    Social media ready
-                  </li>
-                </ul>
-              </div>
-              <div className="rounded-xl border border-border bg-card p-6 sm:col-span-2 lg:col-span-1">
-                <h3 className="text-xl font-semibold text-foreground">Software Support</h3>
-                <p className="mt-2 text-sm text-muted-foreground">JPG is supported by all image editing software.</p>
-                <ul className="mt-4 space-y-2">
-                  <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Check className="h-4 w-4 text-primary shrink-0" />
-                    Any editor
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Check className="h-4 w-4 text-primary shrink-0" />
-                    Print shops
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <FormatFAQ formatName="HEIC to JPG" formatExtension=".heic" />
+        <HowItWorksSection config={config} />
+        <FormatBenefitsSection config={config} />
+        <SupportedFormatsSection config={config} />
+        <WhySnapConvertSection config={config} />
+        <FAQSection config={config} />
       </main>
       <Footer />
     </div>

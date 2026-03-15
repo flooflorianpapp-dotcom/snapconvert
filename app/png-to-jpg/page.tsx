@@ -118,6 +118,45 @@ export default function PngToJpgPage() {
         </section>
 
         <FormatFAQ formatName="PNG to JPG" formatExtension=".png" />
+
+        {/* SEO Content Section */}
+        <section className="px-4 py-16 sm:py-24 border-t border-border">
+          <div className="mx-auto max-w-4xl">
+            <div className="prose prose-gray dark:prose-invert max-w-none">
+              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl mb-6">
+                Free PNG to JPG Converter Online
+              </h2>
+              
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                Convert PNG images to JPG format instantly with our free online tool. PNG (Portable Network Graphics) files are great for images with transparency, but they can result in larger file sizes compared to JPG (JPEG). Our PNG to JPG converter helps you reduce file sizes by up to 90% while maintaining excellent visual quality, making your images perfect for web use, email attachments, and social media sharing.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                When to Convert PNG to JPG
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Converting PNG to JPG is ideal when you need smaller file sizes and don't require transparency. JPG format uses lossy compression that works exceptionally well for photographs and complex images with many colors and gradients. While PNG excels at preserving sharp edges in graphics and logos with transparency, JPG is the preferred format for photos, web images, and any situation where file size matters more than preserving transparency.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                How Our PNG to JPG Converter Works
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Our browser-based converter processes your PNG files entirely on your device using advanced compression algorithms. Simply drag and drop your PNG images, and our tool will convert them to optimized JPG files in seconds. You can adjust quality settings to find the perfect balance between file size and image quality. Since all processing happens in your browser, your images never leave your computer, ensuring complete privacy and security.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                PNG vs JPG: Understanding the Difference
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                PNG uses lossless compression, meaning no data is lost when saving, but this results in larger files. JPG uses lossy compression, achieving much smaller file sizes by discarding some image data that's less noticeable to the human eye. PNG supports transparency and is ideal for logos, icons, and graphics with text. JPG is optimized for photographs and natural images where the compression artifacts are less visible. Choose PNG when you need transparency or pixel-perfect graphics; choose JPG when you need smaller files for photos and web use.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>

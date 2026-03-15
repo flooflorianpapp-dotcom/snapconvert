@@ -116,6 +116,45 @@ export default function HeicToPdfPage() {
         </section>
 
         <FormatFAQ formatName="HEIC to PDF" formatExtension=".heic" />
+
+        {/* SEO Content Section */}
+        <section className="px-4 py-16 sm:py-24 border-t border-border">
+          <div className="mx-auto max-w-4xl">
+            <div className="prose prose-gray dark:prose-invert max-w-none">
+              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl mb-6">
+                Free HEIC to PDF Converter Online
+              </h2>
+              
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                Convert your iPhone and iPad HEIC photos to PDF documents with our free online converter. HEIC (High Efficiency Image Container) is Apple's default image format that offers excellent compression while maintaining high quality. However, when you need to share photos as documents or create portfolios, converting HEIC to PDF is the perfect solution. Our tool creates professional-quality PDF files from your Apple device photos.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                Why Convert HEIC Photos to PDF
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                PDF is the universal standard for document sharing, making it ideal for professional presentations, portfolios, and reports. Converting HEIC to PDF allows you to combine multiple photos into a single, organized document that anyone can view regardless of their device or software. PDFs are perfect for sharing photo collections via email, creating photo albums for printing, or archiving images in a document format that will remain accessible for years to come.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                How Our HEIC to PDF Converter Works
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Our converter processes your HEIC files directly in your browser, ensuring your private photos never leave your device. Simply upload your HEIC images, and our tool will convert them to a high-quality PDF document while preserving the original image resolution and color accuracy. You can convert single images or batch process multiple HEIC files into one PDF. The resulting PDF maintains excellent quality suitable for both screen viewing and professional printing.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                About HEIC Format
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                HEIC (also known as HEIF) is Apple's advanced image format introduced in iOS 11 and macOS High Sierra. It uses the HEVC (H.265) video codec for image compression, achieving files roughly half the size of JPG while maintaining better image quality. While HEIC is excellent for storage efficiency on Apple devices, its limited compatibility with non-Apple platforms and applications makes conversion to more universal formats like PDF essential for sharing and professional use.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>

@@ -118,6 +118,45 @@ export default function WebpToPngPage() {
         </section>
 
         <FormatFAQ formatName="WEBP to PNG" formatExtension=".webp" />
+
+        {/* SEO Content Section */}
+        <section className="px-4 py-16 sm:py-24 border-t border-border">
+          <div className="mx-auto max-w-4xl">
+            <div className="prose prose-gray dark:prose-invert max-w-none">
+              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl mb-6">
+                Free WEBP to PNG Converter Online
+              </h2>
+              
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                Convert WEBP images to PNG format with our free online converter. While WEBP offers excellent compression for web use, PNG remains the preferred format for lossless quality and broad software compatibility. Our WEBP to PNG converter preserves every detail of your images, including any transparency, while converting them to a format that works with virtually all image editing software and applications.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                When to Convert WEBP to PNG
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Converting WEBP to PNG is ideal when you need lossless quality for editing or when working with software that doesn't support WEBP. PNG preserves transparency perfectly and doesn't introduce compression artifacts, making it the best choice for graphics, logos, screenshots, and images that need to maintain pixel-perfect quality. If you've downloaded images from websites in WEBP format and need to edit them in applications like older versions of Photoshop, Illustrator, or other design tools, converting to PNG ensures full compatibility.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                How Our WEBP to PNG Converter Works
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Our converter processes your WEBP files directly in your browser using advanced web technologies. Upload your WEBP images, and our tool will convert them to high-quality PNG files while preserving all transparency and image detail. The conversion happens entirely on your device, so your images never leave your computer. This ensures both privacy and fast processing, even for large files or batch conversions.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-8 mb-4">
+                WEBP vs PNG: Choosing the Right Format
+              </h3>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                WEBP uses advanced compression to create smaller files for web delivery, supporting both lossy and lossless compression. PNG uses lossless compression only, meaning no image data is ever lost, but files are typically larger. While WEBP files can be 25-30% smaller than PNG at equivalent quality, PNG's universal compatibility and guaranteed lossless quality make it the better choice for archival, editing, and professional workflows. Both formats support transparency, but PNG's alpha channel handling is more widely supported across applications.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
