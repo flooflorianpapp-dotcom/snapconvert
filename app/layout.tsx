@@ -40,18 +40,20 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <head>
-    <script
+   <html lang="en">
+  <head>
+    <Script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7074188379523382"
       crossOrigin="anonymous"
-    ></script>
+      strategy="afterInteractive"
+    />
   </head>
-      <body className="font-sans antialiased">
-        {children}
-        <Analytics />
-      </body>
-    </html>
+
+  <body className="font-sans antialiased">
+    {children}
+    <Analytics />
+  </body>
+</html>
   )
 }
