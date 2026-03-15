@@ -1,5 +1,5 @@
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
+import { UnifiedHeader } from "@/components/unified-header"
+import { UnifiedFooter } from "@/components/unified-footer"
 import { ArrowRight, FileImage, FileType, Image, Maximize, Minimize } from "lucide-react"
 import type { Metadata } from "next"
 
@@ -213,7 +213,7 @@ function ToolSection({ title, description, icon, tools }: ToolSectionProps) {
 export default function ToolsPage() {
   return (
     <main className="min-h-screen bg-background">
-      <Header />
+      <UnifiedHeader />
       <div className="pt-16">
         <div className="mx-auto max-w-6xl px-4 py-16">
           <div className="text-center mb-12">
@@ -261,7 +261,7 @@ export default function ToolsPage() {
           />
         </div>
       </div>
-      <Footer />
+      <UnifiedFooter />
     </main>
   )
 }

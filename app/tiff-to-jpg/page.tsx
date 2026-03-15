@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { Shield, Zap, Lock, Check } from "lucide-react"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
+import { UnifiedHeader } from "@/components/unified-header"
+import { UnifiedFooter } from "@/components/unified-footer"
 import { FormatConverter } from "@/components/format-converter"
 import { HowToConvert } from "@/components/how-to-convert"
 import { FormatFAQ } from "@/components/format-faq"
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function TiffToJpgPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
+      <UnifiedHeader />
       <main className="flex-1 pt-16">
         <section className="flex flex-col items-center justify-center px-4 py-16 sm:py-24">
           <div className="w-full max-w-3xl text-center">
@@ -119,7 +119,7 @@ export default function TiffToJpgPage() {
 
         <FormatFAQ formatName="TIFF to JPG" formatExtension=".tiff" />
       </main>
-      <Footer />
+      <UnifiedFooter />
     </div>
   )
 }

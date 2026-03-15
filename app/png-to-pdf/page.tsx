@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { Shield, Zap, Lock, Check } from "lucide-react"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
+import { UnifiedHeader } from "@/components/unified-header"
+import { UnifiedFooter } from "@/components/unified-footer"
 import { ImageConverter } from "@/components/image-converter"
 import { HowToConvert } from "@/components/how-to-convert"
 import { FormatFAQ } from "@/components/format-faq"
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function PngToPdfPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
+      <UnifiedHeader />
       <main className="flex-1 pt-16">
         {/* Hero Section */}
         <section className="flex flex-col items-center justify-center px-4 py-16 sm:py-24">
@@ -121,7 +121,7 @@ export default function PngToPdfPage() {
 
         <FormatFAQ formatName="PNG" formatExtension=".png" />
       </main>
-      <Footer />
+      <UnifiedFooter />
     </div>
   )
 }

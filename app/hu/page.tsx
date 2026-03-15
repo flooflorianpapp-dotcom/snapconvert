@@ -1,15 +1,15 @@
-import { HeaderHu } from "@/components/header-hu"
+import { UnifiedHeader } from "@/components/unified-header"
 import { HeroHu } from "@/components/hero-hu"
 import { HowItWorksHu } from "@/components/how-it-works-hu"
 import { SupportedFormatsHu } from "@/components/supported-formats-hu"
 import { WhySnapConvertHu } from "@/components/why-snapconvert-hu"
 import { FAQHu } from "@/components/faq-hu"
-import { FooterHu } from "@/components/footer-hu"
+import { UnifiedFooter } from "@/components/unified-footer"
 
 export default function HomeHu() {
   return (
     <main className="min-h-screen bg-background">
-      <HeaderHu />
+      <UnifiedHeader />
       <div className="pt-16">
         <HeroHu />
         <HowItWorksHu />
@@ -17,7 +17,7 @@ export default function HomeHu() {
         <WhySnapConvertHu />
         <FAQHu />
       </div>
-      <FooterHu />
+      <UnifiedFooter />
     </main>
   )
 }

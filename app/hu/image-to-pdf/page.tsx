@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { Shield, Zap, Lock } from "lucide-react"
-import { HeaderHu } from "@/components/header-hu"
-import { FooterHu } from "@/components/footer-hu"
+import { UnifiedHeader } from "@/components/unified-header"
+import { UnifiedFooter } from "@/components/unified-footer"
 import { ImageConverter } from "@/components/image-converter"
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function ImageToPdfPageHu() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <HeaderHu />
+      <UnifiedHeader />
       <main className="flex-1 pt-16">
         <section className="flex flex-col items-center justify-center px-4 py-16 sm:py-24">
           <div className="w-full max-w-3xl text-center">
@@ -127,7 +127,7 @@ export default function ImageToPdfPageHu() {
           </div>
         </section>
       </main>
-      <FooterHu />
+      <UnifiedFooter />
     </div>
   )
 }

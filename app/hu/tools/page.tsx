@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
-import { HeaderHu } from "@/components/header-hu"
-import { FooterHu } from "@/components/footer-hu"
+import { UnifiedHeader } from "@/components/unified-header"
+import { UnifiedFooter } from "@/components/unified-footer"
 import { ArrowRight, FileImage, Image, FileText, Settings } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -92,7 +92,7 @@ const categories: ToolCategory[] = [
 export default function ToolsPageHu() {
   return (
     <main className="min-h-screen bg-background">
-      <HeaderHu />
+      <UnifiedHeader />
       <div className="pt-16">
         <section className="px-4 py-16 sm:py-24">
           <div className="mx-auto max-w-6xl">
@@ -144,7 +144,7 @@ export default function ToolsPageHu() {
           </div>
         </section>
       </div>
-      <FooterHu />
+      <UnifiedFooter />
     </main>
   )
 }
