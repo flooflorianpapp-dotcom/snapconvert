@@ -62,7 +62,6 @@ export const toolCategories: ToolCategory[] = [
     tools: [
       { name: "PDF to JPG", description: "Extract PDF pages as JPG images", href: "/pdf-to-jpg" },
       { name: "PDF to PNG", description: "Convert PDF pages to PNG images", href: "/pdf-to-png" },
-      { name: "PDF to Word", description: "Convert PDF documents to editable Word format", href: "/pdf-to-word" },
       { name: "Merge PDF", description: "Combine multiple PDF files into one document", href: "/merge-pdf" },
       { name: "Compress PDF", description: "Reduce PDF file size while maintaining quality", href: "/compress-pdf" },
     ],
@@ -75,7 +74,6 @@ export const toolCategories: ToolCategory[] = [
     tools: [
       { name: "Image Compressor", description: "Reduce image file size while maintaining quality", href: "/image-compressor" },
       { name: "Image Resizer", description: "Resize images to custom dimensions", href: "/image-resizer" },
-      { name: "Background Remover", description: "Remove backgrounds from images instantly", href: "/background-remover" },
     ],
   },
   {
