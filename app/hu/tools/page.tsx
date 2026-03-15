@@ -15,19 +15,39 @@ export const metadata: Metadata = {
   },
 }
 
+// HU pages that exist: use /hu/ prefix
+// EN pages only: use / prefix (fallback to English)
 const imageToPdfTools = [
   { name: "Kép PDF-be", href: "/hu/image-to-pdf", description: "Konvertáljon bármilyen képet PDF dokumentummá" },
+  { name: "JPG PDF-be", href: "/jpg-to-pdf", description: "Konvertáljon JPG képeket PDF formátumba" },
+  { name: "PNG PDF-be", href: "/png-to-pdf", description: "Konvertáljon PNG képeket PDF formátumba" },
+  { name: "WEBP PDF-be", href: "/webp-to-pdf", description: "Konvertáljon WEBP képeket PDF formátumba" },
+  { name: "HEIC PDF-be", href: "/heic-to-pdf", description: "Konvertáljon iPhone HEIC fotókat PDF-be" },
 ]
 
 const imageConverters = [
+  { name: "Kép JPG-be", href: "/image-to-jpg", description: "Konvertáljon bármilyen képet JPG formátumba" },
+  { name: "Kép PNG-be", href: "/image-to-png", description: "Konvertáljon bármilyen képet PNG formátumba" },
   { name: "PNG JPG-be", href: "/hu/png-to-jpg", description: "Konvertáljon PNG képeket JPG formátumba" },
   { name: "JPG PNG-be", href: "/hu/jpg-to-png", description: "Konvertáljon JPG képeket PNG formátumba" },
   { name: "WEBP JPG-be", href: "/hu/webp-to-jpg", description: "Konvertáljon WEBP képeket JPG formátumba" },
+  { name: "WEBP PNG-be", href: "/webp-to-png", description: "Konvertáljon WEBP képeket PNG formátumba" },
+  { name: "WEBP GIF-be", href: "/webp-to-gif", description: "Konvertáljon WEBP képeket GIF formátumba" },
   { name: "HEIC JPG-be", href: "/hu/heic-to-jpg", description: "Konvertáljon iPhone fotókat JPG formátumba" },
+  { name: "HEIC PNG-be", href: "/heic-to-png", description: "Konvertáljon HEIC képeket PNG formátumba" },
+  { name: "SVG PNG-be", href: "/svg-to-png", description: "Konvertáljon SVG vektorokat PNG-be" },
+  { name: "SVG JPG-be", href: "/svg-to-jpg", description: "Konvertáljon SVG vektorokat JPG-be" },
+  { name: "BMP JPG-be", href: "/bmp-to-jpg", description: "Konvertáljon BMP képeket JPG formátumba" },
+  { name: "BMP PNG-be", href: "/bmp-to-png", description: "Konvertáljon BMP képeket PNG formátumba" },
+  { name: "GIF JPG-be", href: "/gif-to-jpg", description: "Konvertáljon GIF képeket JPG formátumba" },
+  { name: "GIF PNG-be", href: "/gif-to-png", description: "Konvertáljon GIF képeket PNG formátumba" },
+  { name: "TIFF JPG-be", href: "/tiff-to-jpg", description: "Konvertáljon TIFF képeket JPG formátumba" },
+  { name: "TIFF PNG-be", href: "/tiff-to-png", description: "Konvertáljon TIFF képeket PNG formátumba" },
 ]
 
 const pdfConverters = [
   { name: "PDF JPG-be", href: "/hu/pdf-to-jpg", description: "Konvertáljon PDF oldalakat JPG képekké" },
+  { name: "PDF PNG-be", href: "/pdf-to-png", description: "Konvertáljon PDF oldalakat PNG képekké" },
 ]
 
 const utilities = [

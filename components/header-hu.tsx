@@ -4,16 +4,36 @@ import { ArrowRight, ChevronDown, Menu, X, Globe, FileImage } from "lucide-react
 import { useState } from "react"
 import { getToolName } from "@/lib/i18n"
 
+// HU pages that exist: use /hu/ prefix
+// EN pages only: use / prefix (fallback to English)
 const pdfTools = [
   { name: "Image to PDF", href: "/hu/image-to-pdf" },
+  { name: "JPG to PDF", href: "/jpg-to-pdf" },
+  { name: "PNG to PDF", href: "/png-to-pdf" },
+  { name: "WEBP to PDF", href: "/webp-to-pdf" },
+  { name: "HEIC to PDF", href: "/heic-to-pdf" },
   { name: "PDF to JPG", href: "/hu/pdf-to-jpg" },
+  { name: "PDF to PNG", href: "/pdf-to-png" },
 ]
 
 const imageTools = [
+  { name: "Image to JPG", href: "/image-to-jpg" },
+  { name: "Image to PNG", href: "/image-to-png" },
   { name: "PNG to JPG", href: "/hu/png-to-jpg" },
   { name: "JPG to PNG", href: "/hu/jpg-to-png" },
   { name: "WEBP to JPG", href: "/hu/webp-to-jpg" },
+  { name: "WEBP to PNG", href: "/webp-to-png" },
+  { name: "WEBP to GIF", href: "/webp-to-gif" },
   { name: "HEIC to JPG", href: "/hu/heic-to-jpg" },
+  { name: "HEIC to PNG", href: "/heic-to-png" },
+  { name: "SVG to PNG", href: "/svg-to-png" },
+  { name: "SVG to JPG", href: "/svg-to-jpg" },
+  { name: "BMP to JPG", href: "/bmp-to-jpg" },
+  { name: "BMP to PNG", href: "/bmp-to-png" },
+  { name: "GIF to JPG", href: "/gif-to-jpg" },
+  { name: "GIF to PNG", href: "/gif-to-png" },
+  { name: "TIFF to JPG", href: "/tiff-to-jpg" },
+  { name: "TIFF to PNG", href: "/tiff-to-png" },
   { name: "Image Compressor", href: "/hu/image-compressor" },
   { name: "Image Resizer", href: "/hu/image-resizer" },
 ]
