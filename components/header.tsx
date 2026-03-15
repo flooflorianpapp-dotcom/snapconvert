@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDown, Menu, X } from "lucide-react"
+import { ArrowRight, ChevronDown, Menu, X } from "lucide-react"
 import { useState } from "react"
 import Image from "next/image"
 
@@ -67,6 +67,13 @@ export function Header() {
               <ChevronDown className={`h-4 w-4 transition-transform ${isToolsOpen ? "rotate-180" : ""}`} />
             </button>
             
+            <a
+              href="/tools"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-full focus:mt-2 focus:rounded focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
+            >
+              View All Tools
+            </a>
+            
             {isToolsOpen && (
               <div className="absolute top-full left-0 mt-2 w-[500px] rounded-lg border border-border bg-card shadow-lg py-2">
                 <div className="grid grid-cols-2 gap-4 p-4">
@@ -100,6 +107,15 @@ export function Header() {
                       ))}
                     </div>
                   </div>
+                </div>
+                <div className="border-t border-border mx-4 pt-3 pb-2">
+                  <a
+                    href="/tools"
+                    className="flex items-center justify-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                  >
+                    View All Tools
+                    <ArrowRight className="h-4 w-4" />
+                  </a>
                 </div>
               </div>
             )}
@@ -162,6 +178,16 @@ export function Header() {
                   </a>
                 ))}
               </div>
+            </div>
+            <div className="border-t border-border pt-4">
+              <a
+                href="/tools"
+                className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors mb-4"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                View All Tools
+                <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
             <div className="border-t border-border pt-4 space-y-2">
               <a
