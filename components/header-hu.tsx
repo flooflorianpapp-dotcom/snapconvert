@@ -1,38 +1,19 @@
 "use client"
 
-import { ArrowRight, ChevronDown, Menu, X, Globe } from "lucide-react"
+import { ArrowRight, ChevronDown, Menu, X, Globe, FileImage } from "lucide-react"
 import { useState } from "react"
-import Image from "next/image"
 import { getToolName } from "@/lib/i18n"
 
 const pdfTools = [
   { name: "Image to PDF", href: "/hu/image-to-pdf" },
-  { name: "JPG to PDF", href: "/hu/jpg-to-pdf" },
-  { name: "PNG to PDF", href: "/hu/png-to-pdf" },
-  { name: "WEBP to PDF", href: "/hu/webp-to-pdf" },
-  { name: "HEIC to PDF", href: "/hu/heic-to-pdf" },
   { name: "PDF to JPG", href: "/hu/pdf-to-jpg" },
-  { name: "PDF to PNG", href: "/hu/pdf-to-png" },
 ]
 
 const imageTools = [
-  { name: "Image to JPG", href: "/hu/image-to-jpg" },
-  { name: "Image to PNG", href: "/hu/image-to-png" },
   { name: "PNG to JPG", href: "/hu/png-to-jpg" },
   { name: "JPG to PNG", href: "/hu/jpg-to-png" },
   { name: "WEBP to JPG", href: "/hu/webp-to-jpg" },
-  { name: "WEBP to PNG", href: "/hu/webp-to-png" },
-  { name: "WEBP to GIF", href: "/hu/webp-to-gif" },
   { name: "HEIC to JPG", href: "/hu/heic-to-jpg" },
-  { name: "HEIC to PNG", href: "/hu/heic-to-png" },
-  { name: "SVG to PNG", href: "/hu/svg-to-png" },
-  { name: "SVG to JPG", href: "/hu/svg-to-jpg" },
-  { name: "BMP to JPG", href: "/hu/bmp-to-jpg" },
-  { name: "BMP to PNG", href: "/hu/bmp-to-png" },
-  { name: "GIF to JPG", href: "/hu/gif-to-jpg" },
-  { name: "GIF to PNG", href: "/hu/gif-to-png" },
-  { name: "TIFF to JPG", href: "/hu/tiff-to-jpg" },
-  { name: "TIFF to PNG", href: "/hu/tiff-to-png" },
   { name: "Image Compressor", href: "/hu/image-compressor" },
   { name: "Image Resizer", href: "/hu/image-resizer" },
 ]
@@ -46,13 +27,9 @@ export function HeaderHu() {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <a href="/hu" className="flex items-center gap-2">
-          <Image 
-            src="/logo.jpg" 
-            alt="SnapConvert" 
-            width={28} 
-            height={28} 
-            className="rounded"
-          />
+          <div className="flex h-7 w-7 items-center justify-center rounded bg-primary">
+            <FileImage className="h-4 w-4 text-primary-foreground" />
+          </div>
           <span className="font-semibold text-foreground">SnapConvert</span>
         </a>
         

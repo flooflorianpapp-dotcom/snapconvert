@@ -1,8 +1,7 @@
 "use client"
 
-import { ArrowRight, ChevronDown, Globe, Menu, X } from "lucide-react"
+import { ArrowRight, ChevronDown, Globe, Menu, X, FileImage } from "lucide-react"
 import { useState } from "react"
-import Image from "next/image"
 
 const pdfTools = [
   { name: "Image to PDF", href: "/image-to-pdf" },
@@ -45,13 +44,9 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <a href="/" className="flex items-center gap-2">
-          <Image 
-            src="/logo.jpg" 
-            alt="SnapConvert" 
-            width={28} 
-            height={28} 
-            className="rounded"
-          />
+          <div className="flex h-7 w-7 items-center justify-center rounded bg-primary">
+            <FileImage className="h-4 w-4 text-primary-foreground" />
+          </div>
           <span className="font-semibold text-foreground">SnapConvert</span>
         </a>
         
