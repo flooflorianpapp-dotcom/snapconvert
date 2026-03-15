@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import { Shield, Zap, Lock } from "lucide-react"
 import { HeaderHu } from "@/components/header-hu"
 import { FooterHu } from "@/components/footer-hu"
-import { ImageToPdfConverter } from "@/components/image-converter"
+import { ImageConverter } from "@/components/image-converter"
 
 export const metadata: Metadata = {
   title: "Kép PDF-be Konvertáló - Ingyenes Online Eszköz | SnapConvert",
@@ -47,7 +47,7 @@ export default function ImageToPdfPageHu() {
           </div>
 
           <div className="mt-10 w-full max-w-3xl">
-            <ImageToPdfConverter />
+            <ImageConverter />
           </div>
         </section>
 
