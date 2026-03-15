@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { LanguageProvider } from '@/components/language-provider'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -15,10 +14,6 @@ export const metadata: Metadata = {
   creator: 'SnapConvert',
   alternates: {
     canonical: 'https://snapconvert.to',
-    languages: {
-      'en': 'https://snapconvert.to',
-      'hu': 'https://snapconvert.to/hu',
-    },
   },
   openGraph: {
     title: 'SnapConvert - Free Image to PDF Converter',
@@ -46,15 +41,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="alternate" hrefLang="en" href="https://snapconvert.to" />
-        <link rel="alternate" hrefLang="hu" href="https://snapconvert.to/hu" />
-        <link rel="alternate" hrefLang="x-default" href="https://snapconvert.to" />
-      </head>
       <body className="font-sans antialiased">
-        <LanguageProvider>
-          {children}
-        </LanguageProvider>
+        {children}
         <Analytics />
       </body>
     </html>
