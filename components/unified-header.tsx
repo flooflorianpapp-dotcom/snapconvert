@@ -1,7 +1,7 @@
 "use client"
 
 import { ArrowRight, ChevronDown, Menu, X, FileImage, Sparkles, Image, FileText, ScanText } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 // Curated tools for the header dropdown - only show the most important tools
 // Full list remains on /tools page via tools-config.ts
@@ -48,6 +48,35 @@ const curatedTools = {
 export function UnifiedHeader() {
   const [isToolsOpen, setIsToolsOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  // Disable body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      // Save current scroll position and disable scroll
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${window.scrollY}px`
+      document.body.style.width = '100%'
+    } else {
+      // Restore scroll position
+      const scrollY = document.body.style.top
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1)
+      }
+    }
+
+    return () => {
+      // Cleanup on unmount
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+    }
+  }, [isMobileMenuOpen])
 
   const categories = Object.values(curatedTools)
 
@@ -138,8 +167,8 @@ export function UnifiedHeader() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-border bg-background">
-          <div className="px-4 py-4 space-y-5">
+        <div className="md:hidden fixed inset-0 top-16 z-40 bg-background border-t border-border overflow-y-auto overscroll-contain">
+          <div className="px-4 py-4 space-y-5 pb-20">
             {categories.map((category) => {
               const IconComponent = category.icon
               return (
