@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { Upload, FileImage, Trash2, Download, AlertCircle, X, Maximize2, Link, Unlink } from "lucide-react"
+import { useState, useRef, useEffect, useCallback } from "react"
+import { Upload, FileImage, Trash2, Download, AlertCircle, X, Maximize2, Link, Unlink, Move } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface ImageFile {
@@ -29,6 +29,12 @@ export function ImageResizer() {
   const [maintainAspect, setMaintainAspect] = useState(true)
   const [aspectRatio, setAspectRatio] = useState(800 / 600)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  
+  // Visual resize state
+  const [isDragging, setIsDragging] = useState(false)
+  const [previewScale, setPreviewScale] = useState(1)
+  const previewContainerRef = useRef<HTMLDivElement>(null)
+  const dragStartRef = useRef<{ x: number; y: number; width: number; height: number } | null>(null)
 
   const handleUploadClick = () => {
     fileInputRef.current?.click()
@@ -124,11 +130,96 @@ export function ImageResizer() {
     setResizedImages([])
   }
 
+  // Calculate preview scale based on container size
+  useEffect(() => {
+    if (images.length > 0 && previewContainerRef.current) {
+      const container = previewContainerRef.current
+      const containerWidth = container.clientWidth - 48 // padding
+      const containerHeight = 300 // max preview height
+      
+      const scaleX = containerWidth / targetWidth
+      const scaleY = containerHeight / targetHeight
+      const scale = Math.min(scaleX, scaleY, 1) // Don't scale up beyond 1
+      
+      setPreviewScale(scale)
+    }
+  }, [images, targetWidth, targetHeight])
+
   useEffect(() => {
     if (images.length > 0) {
       setAspectRatio(images[0].width / images[0].height)
     }
   }, [images])
+
+  // Handle mouse down on resize handle
+  const handleResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      width: targetWidth,
+      height: targetHeight,
+    }
+  }, [targetWidth, targetHeight])
+
+  // Handle mouse move during resize
+  const handleResizeMove = useCallback((e: MouseEvent) => {
+    if (!isDragging || !dragStartRef.current) return
+
+    const deltaX = e.clientX - dragStartRef.current.x
+    const deltaY = e.clientY - dragStartRef.current.y
+
+    // Convert screen pixels to image pixels using inverse of preview scale
+    const scaledDeltaX = deltaX / previewScale
+    const scaledDeltaY = deltaY / previewScale
+
+    let newWidth = Math.max(50, Math.round(dragStartRef.current.width + scaledDeltaX))
+    let newHeight = Math.max(50, Math.round(dragStartRef.current.height + scaledDeltaY))
+
+    // Clamp to reasonable limits
+    newWidth = Math.min(newWidth, 10000)
+    newHeight = Math.min(newHeight, 10000)
+
+    if (maintainAspect) {
+      // Use the larger delta to determine the resize
+      const widthRatio = newWidth / dragStartRef.current.width
+      const heightRatio = newHeight / dragStartRef.current.height
+      
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        newHeight = Math.round(newWidth / aspectRatio)
+      } else {
+        newWidth = Math.round(newHeight * aspectRatio)
+      }
+    }
+
+    setTargetWidth(newWidth)
+    setTargetHeight(newHeight)
+    setResizedImages([])
+  }, [isDragging, previewScale, maintainAspect, aspectRatio])
+
+  // Handle mouse up to end resize
+  const handleResizeEnd = useCallback(() => {
+    setIsDragging(false)
+    dragStartRef.current = null
+  }, [])
+
+  // Add/remove global event listeners for resize
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleResizeMove)
+      window.addEventListener('mouseup', handleResizeEnd)
+      document.body.style.cursor = 'nwse-resize'
+      document.body.style.userSelect = 'none'
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleResizeMove)
+      window.removeEventListener('mouseup', handleResizeEnd)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+  }, [isDragging, handleResizeMove, handleResizeEnd])
 
   const resizeImages = async () => {
     if (images.length === 0) {
@@ -265,28 +356,97 @@ export function ImageResizer() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {images.map((img, index) => (
-              <div key={img.id} className="relative group">
-                <div className="aspect-square rounded-lg overflow-hidden border border-border bg-secondary/50">
-                  <img
-                    src={img.preview}
-                    alt={`Preview ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+          {/* Visual Resize Preview */}
+          <div 
+            ref={previewContainerRef}
+            className="relative rounded-xl border border-border bg-secondary/30 p-6 overflow-hidden"
+          >
+            <div className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
+              <Move className="h-3 w-3" />
+              Drag the corner handle to resize visually
+            </div>
+            
+            <div className="flex items-center justify-center min-h-[200px]">
+              <div 
+                className="relative border-2 border-dashed border-primary/50 bg-background/50"
+                style={{
+                  width: targetWidth * previewScale,
+                  height: targetHeight * previewScale,
+                  transition: isDragging ? 'none' : 'width 0.1s, height 0.1s',
+                }}
+              >
+                {/* Preview Image */}
+                <img
+                  src={images[0].preview}
+                  alt="Preview"
+                  className="w-full h-full object-cover pointer-events-none"
+                  draggable={false}
+                />
+                
+                {/* Dimension overlay */}
+                <div className="absolute top-2 left-2 bg-background/90 backdrop-blur-sm rounded px-2 py-1 text-xs font-medium text-foreground border border-border">
+                  {targetWidth} × {targetHeight}
                 </div>
-                <button
-                  onClick={() => removeImage(img.id)}
-                  className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+
+                {/* Resize Handle */}
+                <div
+                  onMouseDown={handleResizeStart}
+                  className={`absolute -bottom-2 -right-2 w-6 h-6 bg-primary rounded-full cursor-nwse-resize flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors ${
+                    isDragging ? 'ring-2 ring-primary/50' : ''
+                  }`}
+                  title="Drag to resize"
                 >
-                  <X className="h-4 w-4" />
-                </button>
-                <div className="absolute bottom-2 left-2 bg-background/80 backdrop-blur-sm rounded px-2 py-1 text-xs font-medium text-foreground">
-                  {img.width}x{img.height}
+                  <svg 
+                    width="10" 
+                    height="10" 
+                    viewBox="0 0 10 10" 
+                    fill="none" 
+                    className="text-primary-foreground"
+                  >
+                    <path 
+                      d="M9 1L1 9M9 5L5 9M9 9L9 9" 
+                      stroke="currentColor" 
+                      strokeWidth="1.5" 
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Original dimensions info */}
+            <div className="mt-3 text-xs text-muted-foreground text-center">
+              Original: {images[0].width} × {images[0].height} px
+              {images.length > 1 && (
+                <span className="ml-2 text-primary">
+                  (+{images.length - 1} more will use these dimensions)
+                </span>
+              )}
+            </div>
           </div>
+
+          {/* Image thumbnails for multiple images */}
+          {images.length > 1 && (
+            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+              {images.map((img, index) => (
+                <div key={img.id} className="relative group">
+                  <div className="aspect-square rounded-lg overflow-hidden border border-border bg-secondary/50">
+                    <img
+                      src={img.preview}
+                      alt={`Preview ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <button
+                    onClick={() => removeImage(img.id)}
+                    className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Dimension Controls */}
           <div className="space-y-4">
