@@ -70,10 +70,11 @@ export const toolCategories: ToolCategory[] = [
     id: "image-utilities",
     title: "Image Utilities",
     shortTitle: "Utilities",
-    description: "Optimize, resize, and edit your images for any use case.",
+    description: "Optimize, resize, crop, and edit your images for any use case.",
     tools: [
       { name: "Image Compressor", description: "Reduce image file size while maintaining quality", href: "/image-compressor" },
       { name: "Image Resizer", description: "Resize images to custom dimensions", href: "/image-resizer" },
+      { name: "Crop Image", description: "Visually crop and trim your images", href: "/crop-image" },
     ],
   },
   {

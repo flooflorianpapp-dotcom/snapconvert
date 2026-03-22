@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useRef, useEffect, useCallback } from "react"
-import { Upload, FileImage, Trash2, Download, X, Maximize2, Link, Unlink, Move } from "lucide-react"
+import { useState, useRef } from "react"
+import { Upload, FileImage, Trash2, Download, X, Link, Unlink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface ImageFile {
@@ -29,16 +29,6 @@ export function ImageResizer() {
   const [maintainAspect, setMaintainAspect] = useState(true)
   const [aspectRatio, setAspectRatio] = useState(800 / 600)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  
-  // Visual resize state
-  const [isDragging, setIsDragging] = useState(false)
-  const [previewScale, setPreviewScale] = useState(1)
-  const previewContainerRef = useRef<HTMLDivElement>(null)
-  const dragStartRef = useRef<{ x: number; y: number; width: number; height: number } | null>(null)
-
-  // Max dimensions for sliders
-  const maxWidth = images.length > 0 ? Math.max(images[0].width * 2, 4000) : 4000
-  const maxHeight = images.length > 0 ? Math.max(images[0].height * 2, 4000) : 4000
 
   const handleUploadClick = () => {
     fileInputRef.current?.click()
@@ -119,7 +109,7 @@ export function ImageResizer() {
   }
 
   const handleWidthChange = (value: number) => {
-    const clampedValue = Math.max(1, Math.min(value, maxWidth))
+    const clampedValue = Math.max(1, Math.min(value, 10000))
     setTargetWidth(clampedValue)
     if (maintainAspect && images.length > 0) {
       setTargetHeight(Math.round(clampedValue / aspectRatio))
@@ -128,7 +118,7 @@ export function ImageResizer() {
   }
 
   const handleHeightChange = (value: number) => {
-    const clampedValue = Math.max(1, Math.min(value, maxHeight))
+    const clampedValue = Math.max(1, Math.min(value, 10000))
     setTargetHeight(clampedValue)
     if (maintainAspect && images.length > 0) {
       setTargetWidth(Math.round(clampedValue * aspectRatio))
@@ -136,90 +126,20 @@ export function ImageResizer() {
     setResizedImages([])
   }
 
-  // Calculate preview scale based on container size
-  useEffect(() => {
-    if (images.length > 0 && previewContainerRef.current) {
-      const container = previewContainerRef.current
-      const containerWidth = container.clientWidth - 80
-      const containerHeight = 320
-      
-      const scaleX = containerWidth / targetWidth
-      const scaleY = containerHeight / targetHeight
-      const scale = Math.min(scaleX, scaleY, 1)
-      
-      setPreviewScale(scale)
+  const toggleAspectRatio = () => {
+    if (!maintainAspect && images.length > 0) {
+      // Re-sync aspect ratio when enabling lock
+      setAspectRatio(targetWidth / targetHeight)
     }
-  }, [images, targetWidth, targetHeight])
+    setMaintainAspect(!maintainAspect)
+  }
 
-  useEffect(() => {
-    if (images.length > 0) {
-      setAspectRatio(images[0].width / images[0].height)
-    }
-  }, [images])
-
-  // Handle mouse down on resize handle
-  const handleResizeStart = useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    setIsDragging(true)
-    dragStartRef.current = {
-      x: e.clientX,
-      y: e.clientY,
-      width: targetWidth,
-      height: targetHeight,
-    }
-  }, [targetWidth, targetHeight])
-
-  // Handle mouse move during resize
-  const handleResizeMove = useCallback((e: MouseEvent) => {
-    if (!isDragging || !dragStartRef.current) return
-
-    const deltaX = e.clientX - dragStartRef.current.x
-    const deltaY = e.clientY - dragStartRef.current.y
-
-    const scaledDeltaX = deltaX / previewScale
-    const scaledDeltaY = deltaY / previewScale
-
-    let newWidth = Math.max(50, Math.round(dragStartRef.current.width + scaledDeltaX))
-    let newHeight = Math.max(50, Math.round(dragStartRef.current.height + scaledDeltaY))
-
-    newWidth = Math.min(newWidth, 10000)
-    newHeight = Math.min(newHeight, 10000)
-
-    if (maintainAspect) {
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        newHeight = Math.round(newWidth / aspectRatio)
-      } else {
-        newWidth = Math.round(newHeight * aspectRatio)
-      }
-    }
-
-    setTargetWidth(newWidth)
-    setTargetHeight(newHeight)
+  const applyPreset = (width: number, height: number) => {
+    setTargetWidth(width)
+    setTargetHeight(height)
+    setAspectRatio(width / height)
     setResizedImages([])
-  }, [isDragging, previewScale, maintainAspect, aspectRatio])
-
-  // Handle mouse up to end resize
-  const handleResizeEnd = useCallback(() => {
-    setIsDragging(false)
-    dragStartRef.current = null
-  }, [])
-
-  // Add/remove global event listeners for resize
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener('mousemove', handleResizeMove)
-      window.addEventListener('mouseup', handleResizeEnd)
-      document.body.style.cursor = 'nwse-resize'
-      document.body.style.userSelect = 'none'
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', handleResizeMove)
-      window.removeEventListener('mouseup', handleResizeEnd)
-      document.body.style.cursor = ''
-      document.body.style.userSelect = ''
-    }
-  }, [isDragging, handleResizeMove, handleResizeEnd])
+  }
 
   const resizeImages = async () => {
     if (images.length === 0) {
@@ -309,66 +229,8 @@ export function ImageResizer() {
     { label: "Thumbnail", width: 150, height: 150 },
   ]
 
-  // Calculate percentage change from original
-  const getScalePercentage = () => {
-    if (images.length === 0) return 100
-    const originalPixels = images[0].width * images[0].height
-    const newPixels = targetWidth * targetHeight
-    return Math.round((newPixels / originalPixels) * 100)
-  }
-
   return (
     <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
-      {/* Custom slider styles */}
-      <style jsx>{`
-        input[type="range"] {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 100%;
-          height: 8px;
-          border-radius: 4px;
-          outline: none;
-          cursor: pointer;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: hsl(var(--primary));
-          cursor: grab;
-          border: 3px solid hsl(var(--background));
-          box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-          transition: transform 0.1s ease;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover {
-          transform: scale(1.1);
-        }
-        input[type="range"]::-webkit-slider-thumb:active {
-          cursor: grabbing;
-          transform: scale(1.15);
-        }
-        input[type="range"]::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: hsl(var(--primary));
-          cursor: grab;
-          border: 3px solid hsl(var(--background));
-          box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        }
-        .checkerboard {
-          background-image: 
-            linear-gradient(45deg, hsl(var(--muted)) 25%, transparent 25%),
-            linear-gradient(-45deg, hsl(var(--muted)) 25%, transparent 25%),
-            linear-gradient(45deg, transparent 75%, hsl(var(--muted)) 75%),
-            linear-gradient(-45deg, transparent 75%, hsl(var(--muted)) 75%);
-          background-size: 16px 16px;
-          background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
-        }
-      `}</style>
-
       <input
         type="file"
         ref={fileInputRef}
@@ -414,210 +276,87 @@ export function ImageResizer() {
             </div>
           </div>
 
-          {/* Visual Resize Preview with Checkerboard */}
-          <div 
-            ref={previewContainerRef}
-            className="relative rounded-xl border border-border bg-secondary/20 p-6 overflow-hidden"
-          >
-            <div className="text-xs text-muted-foreground mb-4 flex items-center gap-2">
-              <Move className="h-3 w-3" />
-              Drag the corner handle or use sliders below
-            </div>
-            
-            {/* Checkerboard container */}
-            <div className="flex items-center justify-center min-h-[280px] checkerboard rounded-lg p-6">
-              <div 
-                className="relative shadow-2xl"
-                style={{
-                  width: targetWidth * previewScale,
-                  height: targetHeight * previewScale,
-                  transition: isDragging ? 'none' : 'width 0.15s ease-out, height 0.15s ease-out',
-                }}
-              >
-                {/* Thin outline around preview */}
-                <div className="absolute inset-0 border-2 border-primary rounded-sm pointer-events-none" />
-                
-                {/* Corner markers */}
-                <div className="absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 border-primary" />
-                <div className="absolute -top-1 -right-1 w-2 h-2 border-t-2 border-r-2 border-primary" />
-                <div className="absolute -bottom-1 -left-1 w-2 h-2 border-b-2 border-l-2 border-primary" />
-                
-                {/* Preview Image */}
-                <img
-                  src={images[0].preview}
-                  alt="Preview"
-                  className="w-full h-full object-cover rounded-sm"
-                  draggable={false}
-                />
-                
-                {/* Floating Dimension Badge */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground rounded-full px-3 py-1 text-xs font-bold shadow-lg whitespace-nowrap">
-                  {targetWidth} × {targetHeight} px
+          {/* Image Thumbnails */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+            {images.map((img, index) => (
+              <div key={img.id} className="relative group">
+                <div className="aspect-square rounded-lg overflow-hidden border border-border bg-secondary/50">
+                  <img
+                    src={img.preview}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-
-                {/* Scale percentage badge */}
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-background/95 backdrop-blur-sm text-foreground rounded-full px-2 py-0.5 text-[10px] font-medium border border-border shadow whitespace-nowrap">
-                  {getScalePercentage()}% of original
-                </div>
-
-                {/* Resize Handle */}
-                <div
-                  onMouseDown={handleResizeStart}
-                  className={`absolute -bottom-3 -right-3 w-7 h-7 bg-primary rounded-full cursor-nwse-resize flex items-center justify-center shadow-lg hover:scale-110 transition-transform ${
-                    isDragging ? 'scale-125 ring-4 ring-primary/30' : ''
-                  }`}
-                  title="Drag to resize"
+                <button
+                  onClick={() => removeImage(img.id)}
+                  className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                  <svg 
-                    width="12" 
-                    height="12" 
-                    viewBox="0 0 12 12" 
-                    fill="none" 
-                    className="text-primary-foreground"
-                  >
-                    <path 
-                      d="M10 2L2 10M10 6L6 10M10 10L10 10" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
+                  <X className="h-3 w-3" />
+                </button>
+                <p className="text-[10px] text-muted-foreground text-center mt-1 truncate">
+                  {img.width} x {img.height}
+                </p>
               </div>
-            </div>
-
-            {/* Original dimensions info */}
-            <div className="mt-4 text-xs text-muted-foreground text-center">
-              Original: {images[0].width} × {images[0].height} px
-              {images.length > 1 && (
-                <span className="ml-2 text-primary">
-                  (+{images.length - 1} more will use these dimensions)
-                </span>
-              )}
-            </div>
+            ))}
           </div>
 
-          {/* Image thumbnails for multiple images */}
-          {images.length > 1 && (
-            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
-              {images.map((img, index) => (
-                <div key={img.id} className="relative group">
-                  <div className="aspect-square rounded-lg overflow-hidden border border-border bg-secondary/50">
-                    <img
-                      src={img.preview}
-                      alt={`Preview ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <button
-                    onClick={() => removeImage(img.id)}
-                    className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Dimension Controls with Enhanced Sliders */}
-          <div className="space-y-6 bg-secondary/20 rounded-xl p-5 border border-border">
-            {/* Width Slider */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-foreground">Width</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    value={targetWidth}
-                    onChange={(e) => handleWidthChange(parseInt(e.target.value) || 0)}
-                    className="w-20 px-2 py-1 rounded-md border border-border bg-background text-foreground text-sm text-right font-mono"
-                    min="1"
-                    max={maxWidth}
-                  />
-                  <span className="text-xs text-muted-foreground">px</span>
-                </div>
-              </div>
-              <div className="relative">
+          {/* Dimension Controls */}
+          <div className="bg-secondary/20 rounded-xl p-5 border border-border space-y-5">
+            <h4 className="font-medium text-foreground">New Dimensions</h4>
+            
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="flex-1 w-full">
+                <label className="text-sm text-muted-foreground mb-1.5 block">Width (px)</label>
                 <input
-                  type="range"
-                  min="50"
-                  max={maxWidth}
+                  type="number"
                   value={targetWidth}
-                  onChange={(e) => handleWidthChange(parseInt(e.target.value))}
-                  className="w-full"
-                  style={{
-                    background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${(targetWidth / maxWidth) * 100}%, hsl(var(--muted)) ${(targetWidth / maxWidth) * 100}%, hsl(var(--muted)) 100%)`
-                  }}
+                  onChange={(e) => handleWidthChange(parseInt(e.target.value) || 0)}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-center font-mono"
+                  min="1"
+                  max="10000"
                 />
               </div>
-            </div>
-
-            {/* Aspect Ratio Lock */}
-            <div className="flex justify-center">
+              
               <button
-                onClick={() => setMaintainAspect(!maintainAspect)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
-                  maintainAspect
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground"
+                onClick={toggleAspectRatio}
+                className={`mt-6 sm:mt-0 p-2 rounded-lg border transition-colors ${
+                  maintainAspect 
+                    ? 'border-primary bg-primary/10 text-primary' 
+                    : 'border-border bg-secondary/50 text-muted-foreground'
                 }`}
+                title={maintainAspect ? "Aspect ratio locked" : "Aspect ratio unlocked"}
               >
-                {maintainAspect ? <Link className="h-4 w-4" /> : <Unlink className="h-4 w-4" />}
-                <span className="text-xs font-medium">
-                  {maintainAspect ? "Aspect Locked" : "Aspect Unlocked"}
-                </span>
+                {maintainAspect ? <Link className="h-5 w-5" /> : <Unlink className="h-5 w-5" />}
               </button>
-            </div>
-
-            {/* Height Slider */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-foreground">Height</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    value={targetHeight}
-                    onChange={(e) => handleHeightChange(parseInt(e.target.value) || 0)}
-                    className="w-20 px-2 py-1 rounded-md border border-border bg-background text-foreground text-sm text-right font-mono"
-                    min="1"
-                    max={maxHeight}
-                  />
-                  <span className="text-xs text-muted-foreground">px</span>
-                </div>
-              </div>
-              <div className="relative">
+              
+              <div className="flex-1 w-full">
+                <label className="text-sm text-muted-foreground mb-1.5 block">Height (px)</label>
                 <input
-                  type="range"
-                  min="50"
-                  max={maxHeight}
+                  type="number"
                   value={targetHeight}
-                  onChange={(e) => handleHeightChange(parseInt(e.target.value))}
-                  className="w-full"
-                  style={{
-                    background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${(targetHeight / maxHeight) * 100}%, hsl(var(--muted)) ${(targetHeight / maxHeight) * 100}%, hsl(var(--muted)) 100%)`
-                  }}
+                  onChange={(e) => handleHeightChange(parseInt(e.target.value) || 0)}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-center font-mono"
+                  min="1"
+                  max="10000"
                 />
               </div>
             </div>
 
             {/* Preset Sizes */}
-            <div className="space-y-2 pt-2 border-t border-border">
-              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Quick Presets</label>
+            <div>
+              <label className="text-sm text-muted-foreground mb-2 block">Preset Sizes</label>
               <div className="flex flex-wrap gap-2">
                 {presetSizes.map((preset) => (
                   <button
                     key={preset.label}
-                    onClick={() => {
-                      setTargetWidth(preset.width)
-                      setTargetHeight(preset.height)
-                      setMaintainAspect(false)
-                      setResizedImages([])
-                    }}
-                    className="px-3 py-1.5 text-xs font-medium rounded-full border border-border bg-background text-muted-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all"
+                    onClick={() => applyPreset(preset.width, preset.height)}
+                    className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
+                      targetWidth === preset.width && targetHeight === preset.height
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-border bg-secondary/50 text-muted-foreground hover:border-primary/50'
+                    }`}
                   >
-                    {preset.label}
-                    <span className="ml-1 opacity-60">{preset.width}×{preset.height}</span>
+                    {preset.label} ({preset.width}x{preset.height})
                   </button>
                 ))}
               </div>
@@ -625,69 +364,70 @@ export function ImageResizer() {
           </div>
 
           {error && (
-            <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
               {error}
             </div>
           )}
 
-          {resizedImages.length === 0 ? (
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={resizeImages}
-              disabled={isResizing}
-            >
-              {isResizing ? (
-                <>
-                  <Maximize2 className="mr-2 h-4 w-4 animate-pulse" />
-                  Resizing...
-                </>
-              ) : (
-                <>
-                  <Maximize2 className="mr-2 h-4 w-4" />
-                  Resize to {targetWidth} × {targetHeight}
-                </>
-              )}
-            </Button>
-          ) : (
+          <Button
+            className="w-full"
+            size="lg"
+            onClick={resizeImages}
+            disabled={isResizing || images.length === 0}
+          >
+            {isResizing ? (
+              <>
+                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Resizing...
+              </>
+            ) : (
+              <>
+                <FileImage className="mr-2 h-4 w-4" />
+                Resize {images.length > 1 ? `${images.length} Images` : "Image"}
+              </>
+            )}
+          </Button>
+
+          {/* Results */}
+          {resizedImages.length > 0 && (
             <div className="space-y-4">
-              <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
-                <div className="flex items-center gap-2 text-primary mb-3">
-                  <FileImage className="h-5 w-5" />
-                  <span className="font-medium">Resize Complete!</span>
-                </div>
-                <div className="space-y-2 max-h-60 overflow-y-auto">
-                  {resizedImages.map((img, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between bg-background/50 rounded-lg px-3 py-2"
-                    >
-                      <div className="flex-1 min-w-0 mr-2">
-                        <p className="text-sm text-foreground truncate">{img.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {img.width} × {img.height} pixels
-                        </p>
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => downloadImage(img.url, img.name)}
-                      >
-                        <Download className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+              <div className="flex items-center justify-between">
+                <h4 className="font-semibold text-foreground">
+                  Resized Images ({resizedImages.length})
+                </h4>
                 {resizedImages.length > 1 && (
-                  <Button className="w-full mt-3" onClick={downloadAll}>
+                  <Button variant="outline" size="sm" onClick={downloadAll}>
                     <Download className="mr-2 h-4 w-4" />
-                    Download All ({resizedImages.length} images)
+                    Download All
                   </Button>
                 )}
               </div>
-              <Button variant="outline" className="w-full" onClick={() => setResizedImages([])}>
-                Resize Again
-              </Button>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {resizedImages.map((img, index) => (
+                  <div key={index} className="rounded-lg border border-border bg-secondary/30 p-3">
+                    <div className="aspect-square rounded-lg overflow-hidden bg-secondary/50 mb-2">
+                      <img
+                        src={img.url}
+                        alt={img.name}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground text-center mb-2 truncate">
+                      {img.width} x {img.height}
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => downloadImage(img.url, img.name)}
+                    >
+                      <Download className="mr-2 h-3 w-3" />
+                      Download
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
