@@ -2,6 +2,7 @@
 
 import { ArrowRight, ChevronDown, Menu, X, FileImage, Sparkles, Image, FileText, ScanText } from "lucide-react"
 import { useState, useEffect } from "react"
+import { createPortal } from "react-dom"
 
 // Curated tools for the header dropdown - only show the most important tools
 // Full list remains on /tools page via tools-config.ts
@@ -45,210 +46,223 @@ const curatedTools = {
   },
 }
 
-export function UnifiedHeader() {
-  const [isToolsOpen, setIsToolsOpen] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+function MobileMenu({ 
+  isOpen, 
+  onClose,
+  categories 
+}: { 
+  isOpen: boolean
+  onClose: () => void
+  categories: typeof curatedTools[keyof typeof curatedTools][]
+}) {
   const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  // Disable body scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      // Simple overflow hidden - avoid position:fixed which breaks touch on iOS
-      const scrollY = window.scrollY
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (isOpen) {
       document.body.style.overflow = 'hidden'
-      document.body.dataset.scrollY = String(scrollY)
     } else {
-      // Restore scroll
       document.body.style.overflow = ''
-      const scrollY = document.body.dataset.scrollY
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY))
-        delete document.body.dataset.scrollY
-      }
+      setIsMobileToolsOpen(false)
     }
 
     return () => {
       document.body.style.overflow = ''
     }
-  }, [isMobileMenuOpen])
+  }, [isOpen])
+
+  if (!mounted || !isOpen) return null
+
+  const menuContent = (
+    <div 
+      className="fixed inset-0 top-16 z-[9999] bg-background border-t border-border overflow-y-auto"
+      style={{ touchAction: 'pan-y' }}
+    >
+      <div className="px-4 py-4 space-y-1 pb-24">
+        {/* Tools Expandable Section */}
+        <div>
+          <button
+            onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
+            className="flex items-center justify-between w-full py-3 text-sm text-foreground active:bg-muted/50 rounded"
+            type="button"
+          >
+            <span>Tools</span>
+            <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${isMobileToolsOpen ? "rotate-180" : ""}`} />
+          </button>
+          
+          {isMobileToolsOpen && (
+            <div className="pl-4 pb-4 space-y-4">
+              {categories.map((category) => {
+                const IconComponent = category.icon
+                return (
+                  <div key={category.title}>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <IconComponent className="h-3.5 w-3.5 text-primary" />
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                        {category.title}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                      {category.tools.map((tool) => (
+                        <a
+                          key={tool.href}
+                          href={tool.href}
+                          className="py-2 text-sm text-muted-foreground active:text-foreground transition-colors"
+                          onClick={onClose}
+                        >
+                          {tool.name}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+              
+              <a
+                href="/tools"
+                className="flex items-center gap-2 text-sm font-medium text-primary active:text-primary/80 transition-colors pt-2"
+                onClick={onClose}
+              >
+                View All Tools
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          )}
+        </div>
+        
+        <div className="border-t border-border" />
+        
+        <a
+          href="/#how-it-works"
+          className="block py-3 text-sm text-muted-foreground active:text-foreground"
+          onClick={onClose}
+        >
+          How It Works
+        </a>
+        <a
+          href="/#why-snapconvert"
+          className="block py-3 text-sm text-muted-foreground active:text-foreground"
+          onClick={onClose}
+        >
+          Why Us
+        </a>
+        <a
+          href="/#faq"
+          className="block py-3 text-sm text-muted-foreground active:text-foreground"
+          onClick={onClose}
+        >
+          FAQ
+        </a>
+      </div>
+    </div>
+  )
+
+  return createPortal(menuContent, document.body)
+}
+
+export function UnifiedHeader() {
+  const [isToolsOpen, setIsToolsOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const categories = Object.values(curatedTools)
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <a href="/" className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded bg-primary">
-            <FileImage className="h-4 w-4 text-primary-foreground" />
-          </div>
-          <span className="font-semibold text-foreground">SnapConvert</span>
-        </a>
-        
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          {/* Tools Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setIsToolsOpen(!isToolsOpen)}
-              onBlur={() => setTimeout(() => setIsToolsOpen(false), 150)}
-              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Tools
-              <ChevronDown className={`h-4 w-4 transition-transform ${isToolsOpen ? "rotate-180" : ""}`} />
-            </button>
-            
-            {isToolsOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] rounded-lg border border-border bg-card shadow-lg p-4">
-                <div className="grid grid-cols-4 gap-6">
-                  {categories.map((category) => {
-                    const IconComponent = category.icon
-                    return (
-                      <div key={category.title}>
-                        <div className="flex items-center gap-1.5 mb-3">
-                          <IconComponent className="h-3.5 w-3.5 text-primary" />
-                          <span className="text-xs font-semibold text-foreground uppercase tracking-wide">
-                            {category.title}
-                          </span>
-                        </div>
-                        <div className="space-y-1">
-                          {category.tools.map((tool) => (
-                            <a
-                              key={tool.href}
-                              href={tool.href}
-                              className="block py-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                              {tool.name}
-                            </a>
-                          ))}
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-                <div className="border-t border-border mt-4 pt-3">
-                  <a
-                    href="/tools"
-                    className="flex items-center justify-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                  >
-                    View All Tools
-                    <ArrowRight className="h-4 w-4" />
-                  </a>
-                </div>
-              </div>
-            )}
-          </div>
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+          <a href="/" className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded bg-primary">
+              <FileImage className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <span className="font-semibold text-foreground">SnapConvert</span>
+          </a>
           
-          <a href="/#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            How It Works
-          </a>
-          <a href="/#why-snapconvert" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            Why Us
-          </a>
-          <a href="/#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            FAQ
-          </a>
-        </nav>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden p-2 text-muted-foreground hover:text-foreground"
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div 
-          className="md:hidden fixed left-0 right-0 top-16 bottom-0 z-50 bg-background border-t border-border overflow-y-auto overscroll-contain"
-          style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
-        >
-          <div className="px-4 py-4 space-y-1 pb-24">
-            {/* Tools Expandable Section */}
-            <div>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-6">
+            {/* Tools Dropdown */}
+            <div className="relative">
               <button
-                onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
-                className="flex items-center justify-between w-full py-3 text-sm text-foreground"
-                type="button"
+                onClick={() => setIsToolsOpen(!isToolsOpen)}
+                onBlur={() => setTimeout(() => setIsToolsOpen(false), 150)}
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                <span>Tools</span>
-                <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${isMobileToolsOpen ? "rotate-180" : ""}`} />
+                Tools
+                <ChevronDown className={`h-4 w-4 transition-transform ${isToolsOpen ? "rotate-180" : ""}`} />
               </button>
               
-              {isMobileToolsOpen && (
-                <div className="pl-4 pb-4 space-y-4">
-                  {categories.map((category) => {
-                    const IconComponent = category.icon
-                    return (
-                      <div key={category.title}>
-                        <div className="flex items-center gap-1.5 mb-2">
-                          <IconComponent className="h-3.5 w-3.5 text-primary" />
-                          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                            {category.title}
-                          </span>
+              {isToolsOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] rounded-lg border border-border bg-card shadow-lg p-4">
+                  <div className="grid grid-cols-4 gap-6">
+                    {categories.map((category) => {
+                      const IconComponent = category.icon
+                      return (
+                        <div key={category.title}>
+                          <div className="flex items-center gap-1.5 mb-3">
+                            <IconComponent className="h-3.5 w-3.5 text-primary" />
+                            <span className="text-xs font-semibold text-foreground uppercase tracking-wide">
+                              {category.title}
+                            </span>
+                          </div>
+                          <div className="space-y-1">
+                            {category.tools.map((tool) => (
+                              <a
+                                key={tool.href}
+                                href={tool.href}
+                                className="block py-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {tool.name}
+                              </a>
+                            ))}
+                          </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                          {category.tools.map((tool) => (
-                            <a
-                              key={tool.href}
-                              href={tool.href}
-                              className="py-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                              onClick={() => {
-                                setIsMobileMenuOpen(false)
-                                setIsMobileToolsOpen(false)
-                              }}
-                            >
-                              {tool.name}
-                            </a>
-                          ))}
-                        </div>
-                      </div>
-                    )
-                  })}
-                  
-                  <a
-                    href="/tools"
-                    className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors pt-2"
-                    onClick={() => {
-                      setIsMobileMenuOpen(false)
-                      setIsMobileToolsOpen(false)
-                    }}
-                  >
-                    View All Tools
-                    <ArrowRight className="h-4 w-4" />
-                  </a>
+                      )
+                    })}
+                  </div>
+                  <div className="border-t border-border mt-4 pt-3">
+                    <a
+                      href="/tools"
+                      className="flex items-center justify-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                    >
+                      View All Tools
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
             
-            <div className="border-t border-border" />
-            
-            <a
-              href="/#how-it-works"
-              className="block py-3 text-sm text-muted-foreground hover:text-foreground"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
+            <a href="/#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               How It Works
             </a>
-            <a
-              href="/#why-snapconvert"
-              className="block py-3 text-sm text-muted-foreground hover:text-foreground"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
+            <a href="/#why-snapconvert" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Why Us
             </a>
-            <a
-              href="/#faq"
-              className="block py-3 text-sm text-muted-foreground hover:text-foreground"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
+            <a href="/#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               FAQ
             </a>
-          </div>
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 text-muted-foreground active:text-foreground"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
-      )}
-    </header>
+      </header>
+
+      {/* Mobile Menu - rendered via portal outside header stacking context */}
+      <MobileMenu 
+        isOpen={isMobileMenuOpen} 
+        onClose={() => setIsMobileMenuOpen(false)}
+        categories={categories}
+      />
+    </>
   )
 }
