@@ -1,4 +1,6 @@
-{/* 
+"use client"
+
+/* 
   Temporarily disabled – will be re-enabled later
   
   This tool is hidden from navigation but the code is preserved.
@@ -8,9 +10,7 @@
   3. Add back to tools-config.ts in the "image-utilities" category:
      { name: "Background Remover", description: "Remove backgrounds from images instantly", href: "/background-remover" }
   4. Add back to sitemap.ts
-*/}
-
-"use client"
+*/
 
 import { UnifiedHeader } from "@/components/unified-header"
 import { UnifiedFooter } from "@/components/unified-footer"
