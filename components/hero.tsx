@@ -1,44 +1,44 @@
 "use client"
 
-import { FileImage, ArrowRight, Image, FileText, ScanText, Combine } from "lucide-react"
+import { FileImage, ArrowRight, Image, Minimize, Crop, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const featuredTools = [
   {
-    name: "Image to PDF",
-    description: "Convert images to PDF documents",
-    href: "/image-to-pdf",
+    name: "Image Compressor",
+    description: "Reduce image file size while keeping quality",
+    href: "/image-compressor",
+    icon: Minimize,
+  },
+  {
+    name: "Image Resizer",
+    description: "Resize images to custom dimensions",
+    href: "/image-resizer",
+    icon: Image,
+  },
+  {
+    name: "Image to JPG",
+    description: "Convert any image to JPG format",
+    href: "/image-to-jpg",
+    icon: Image,
+  },
+  {
+    name: "JPG to PDF",
+    description: "Convert JPG images to PDF documents",
+    href: "/jpg-to-pdf",
     icon: FileImage,
   },
   {
-    name: "PNG to JPG",
-    description: "Convert PNG images to JPG format",
-    href: "/png-to-jpg",
-    icon: Image,
+    name: "PDF to JPG",
+    description: "Extract PDF pages as JPG images",
+    href: "/pdf-to-jpg",
+    icon: FileText,
   },
   {
-    name: "JPG to PNG",
-    description: "Convert JPG images to PNG format",
-    href: "/jpg-to-png",
-    icon: Image,
-  },
-  {
-    name: "WEBP to JPG",
-    description: "Convert WEBP images to JPG format",
-    href: "/webp-to-jpg",
-    icon: Image,
-  },
-  {
-    name: "Merge PDF",
-    description: "Combine multiple PDFs into one",
-    href: "/merge-pdf",
-    icon: Combine,
-  },
-  {
-    name: "Image to Text",
-    description: "Extract text from images with OCR",
-    href: "/image-to-text",
-    icon: ScanText,
+    name: "Crop Image",
+    description: "Visually crop and trim your images",
+    href: "/crop-image",
+    icon: Crop,
   },
 ]
 
