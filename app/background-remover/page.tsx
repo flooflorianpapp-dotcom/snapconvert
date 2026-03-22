@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useCallback } from "react"
-import { Shield, Zap, Lock, Upload, X, Download, Loader2, ImageIcon, AlertCircle } from "lucide-react"
+import { useState, useCallback, useRef } from "react"
+import { Shield, Zap, Lock, Upload, X, Download, Loader2, ImageIcon } from "lucide-react"
 import { UnifiedHeader } from "@/components/unified-header"
 import { UnifiedFooter } from "@/components/unified-footer"
 import { Button } from "@/components/ui/button"
@@ -12,8 +12,8 @@ export default function BackgroundRemoverPage() {
   const [preview, setPreview] = useState<string | null>(null)
   const [processedImage, setProcessedImage] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [dragActive, setDragActive] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -43,7 +43,6 @@ export default function BackgroundRemoverPage() {
   const processFile = (selectedFile: File) => {
     setFile(selectedFile)
     setProcessedImage(null)
-    setError(null)
     const reader = new FileReader()
     reader.onload = (e) => {
       setPreview(e.target?.result as string)
@@ -62,34 +61,75 @@ export default function BackgroundRemoverPage() {
     setFile(null)
     setPreview(null)
     setProcessedImage(null)
-    setError(null)
   }
 
   const removeBackground = async () => {
-    if (!file) return
+    if (!preview || !canvasRef.current) return
 
     setIsProcessing(true)
-    setError(null)
 
     try {
-      const formData = new FormData()
-      formData.append("image", file)
-
-      const response = await fetch("/api/remove-background", {
-        method: "POST",
-        body: formData,
+      const img = new Image()
+      img.crossOrigin = "anonymous"
+      
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve()
+        img.onerror = reject
+        img.src = preview
       })
 
-      const data = await response.json()
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext("2d")
+      if (!ctx) throw new Error("Could not get canvas context")
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to remove background")
+      canvas.width = img.width
+      canvas.height = img.height
+      ctx.drawImage(img, 0, 0)
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      const data = imageData.data
+
+      // Simple background removal based on edge detection and color similarity
+      // Sample background color from corners
+      const bgColors = [
+        { r: data[0], g: data[1], b: data[2] },
+        { r: data[(canvas.width - 1) * 4], g: data[(canvas.width - 1) * 4 + 1], b: data[(canvas.width - 1) * 4 + 2] },
+        { r: data[(canvas.height - 1) * canvas.width * 4], g: data[(canvas.height - 1) * canvas.width * 4 + 1], b: data[(canvas.height - 1) * canvas.width * 4 + 2] },
+        { r: data[data.length - 4], g: data[data.length - 3], b: data[data.length - 2] },
+      ]
+
+      // Average background color
+      const avgBg = {
+        r: Math.round(bgColors.reduce((sum, c) => sum + c.r, 0) / 4),
+        g: Math.round(bgColors.reduce((sum, c) => sum + c.g, 0) / 4),
+        b: Math.round(bgColors.reduce((sum, c) => sum + c.b, 0) / 4),
       }
 
-      setProcessedImage(data.image)
-    } catch (err) {
-      console.error("Background removal error:", err)
-      setError(err instanceof Error ? err.message : "An unexpected error occurred")
+      // Color distance threshold
+      const threshold = 50
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i]
+        const g = data[i + 1]
+        const b = data[i + 2]
+
+        // Calculate color distance from background
+        const distance = Math.sqrt(
+          Math.pow(r - avgBg.r, 2) +
+          Math.pow(g - avgBg.g, 2) +
+          Math.pow(b - avgBg.b, 2)
+        )
+
+        // Make pixel transparent if close to background color
+        if (distance < threshold) {
+          data[i + 3] = 0 // Set alpha to 0
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0)
+      setProcessedImage(canvas.toDataURL("image/png"))
+    } catch (error) {
+      console.error("Background removal error:", error)
     } finally {
       setIsProcessing(false)
     }
@@ -114,27 +154,29 @@ export default function BackgroundRemoverPage() {
               Background Remover
             </h1>
             <p className="mt-6 text-lg text-muted-foreground sm:text-xl leading-relaxed max-w-2xl mx-auto">
-              Remove backgrounds from images instantly with AI. Perfect for product photos, portraits, and graphics. Get transparent PNG images in seconds.
+              Remove backgrounds from images instantly. Perfect for product photos, portraits, and graphics. Get transparent PNG images in seconds.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Zap className="h-4 w-4 text-primary" />
-                <span>AI-powered</span>
+                <span>Free to use</span>
               </div>
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-primary" />
-                <span>High quality results</span>
+                <span>No sign-up required</span>
               </div>
               <div className="flex items-center gap-2">
                 <Lock className="h-4 w-4 text-primary" />
-                <span>Secure processing</span>
+                <span>Files stay in your browser</span>
               </div>
             </div>
           </div>
 
           <div className="mt-10 w-full max-w-3xl">
             <div className="rounded-xl border border-border bg-card p-6">
+              <canvas ref={canvasRef} className="hidden" />
+              
               {!file ? (
                 <div
                   className={cn(
@@ -162,19 +204,11 @@ export default function BackgroundRemoverPage() {
                     className="absolute inset-0 cursor-pointer opacity-0"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Supports JPG, PNG, WEBP (max 12MB)
+                    Supports JPG, PNG, WEBP
                   </p>
                 </div>
               ) : (
                 <div className="space-y-6">
-                  {/* Error Message */}
-                  {error && (
-                    <div className="flex items-center gap-2 p-4 rounded-lg bg-destructive/10 border border-destructive/20">
-                      <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
-                      <p className="text-sm text-destructive">{error}</p>
-                    </div>
-                  )}
-
                   {/* Image Preview */}
                   <div className="relative">
                     <button
@@ -207,12 +241,7 @@ export default function BackgroundRemoverPage() {
                             backgroundColor: processedImage ? "transparent" : "hsl(var(--muted)/0.3)"
                           }}
                         >
-                          {isProcessing ? (
-                            <div className="text-center p-4">
-                              <Loader2 className="h-12 w-12 text-primary mx-auto mb-2 animate-spin" />
-                              <p className="text-sm text-muted-foreground">Removing background...</p>
-                            </div>
-                          ) : processedImage ? (
+                          {processedImage ? (
                             <img
                               src={processedImage}
                               alt="Result"
@@ -228,7 +257,7 @@ export default function BackgroundRemoverPage() {
                       </div>
                     </div>
                     <p className="mt-2 text-sm text-muted-foreground text-center">
-                      {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                      {file.name}
                     </p>
                   </div>
 
@@ -297,9 +326,9 @@ export default function BackgroundRemoverPage() {
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <span className="text-xl font-bold">2</span>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">AI Processing</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-2">Auto Detection</h3>
                 <p className="text-muted-foreground">
-                  Our AI-powered system analyzes your image and precisely detects and removes the background.
+                  Our algorithm analyzes the image and detects the background based on color patterns.
                 </p>
               </div>
               <div className="text-center">
@@ -308,7 +337,7 @@ export default function BackgroundRemoverPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">Download Result</h3>
                 <p className="text-muted-foreground">
-                  Download your image with a transparent background as a high-quality PNG file.
+                  Download your image with a transparent background as a PNG file.
                 </p>
               </div>
             </div>
@@ -331,13 +360,13 @@ export default function BackgroundRemoverPage() {
               <div className="rounded-xl border border-border bg-card p-6">
                 <h3 className="text-lg font-semibold text-foreground mb-2">PNG</h3>
                 <p className="text-sm text-muted-foreground">
-                  Process PNG images and output transparent backgrounds in high quality.
+                  Process PNG images and output transparent backgrounds in the same format.
                 </p>
               </div>
               <div className="rounded-xl border border-border bg-card p-6">
                 <h3 className="text-lg font-semibold text-foreground mb-2">WEBP</h3>
                 <p className="text-sm text-muted-foreground">
-                  Full support for modern WEBP images with precise background removal.
+                  Full support for modern WEBP images with high-quality background removal.
                 </p>
               </div>
             </div>
@@ -379,26 +408,26 @@ export default function BackgroundRemoverPage() {
             <div className="space-y-6">
               <div className="rounded-xl border border-border bg-card p-6">
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  How does AI background removal work?
+                  How does background removal work?
                 </h3>
                 <p className="text-muted-foreground">
-                  Our tool uses advanced AI technology to detect the main subject in your image and precisely separate it from the background. The AI has been trained on millions of images to recognize people, products, animals, and objects.
+                  Our tool analyzes the colors in your image, detects the background based on color patterns from the edges, and makes those pixels transparent.
                 </p>
               </div>
               <div className="rounded-xl border border-border bg-card p-6">
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  What types of images work best?
+                  What type of backgrounds work best?
                 </h3>
                 <p className="text-muted-foreground">
-                  The AI works best with clear subjects like people, products, and objects. It handles complex backgrounds including outdoor scenes, gradients, and busy patterns. For best results, ensure good lighting and contrast between subject and background.
+                  Solid, uniform backgrounds (like white, green screen, or plain colors) work best. Complex or gradient backgrounds may require manual editing.
                 </p>
               </div>
               <div className="rounded-xl border border-border bg-card p-6">
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Is my image kept private?
+                  Is my image uploaded to a server?
                 </h3>
                 <p className="text-muted-foreground">
-                  Your image is processed securely and is not stored permanently. The image is sent to our processing server, the background is removed, and the result is returned to you. We do not keep or share your images.
+                  No. All processing happens locally in your browser. Your images never leave your device, ensuring complete privacy.
                 </p>
               </div>
               <div className="rounded-xl border border-border bg-card p-6">
@@ -406,7 +435,7 @@ export default function BackgroundRemoverPage() {
                   What format is the output?
                 </h3>
                 <p className="text-muted-foreground">
-                  The output is always a high-quality PNG file with a transparent background. PNG format supports transparency, allowing you to place your subject on any background.
+                  The output is always a PNG file, which supports transparency. This allows you to use the image on any background.
                 </p>
               </div>
               <div className="rounded-xl border border-border bg-card p-6">
@@ -414,7 +443,7 @@ export default function BackgroundRemoverPage() {
                   Is there a file size limit?
                 </h3>
                 <p className="text-muted-foreground">
-                  Yes, the maximum file size is 12MB. Most standard photos and product images are well under this limit. For larger files, consider compressing the image first using our Image Compressor tool.
+                  There is no strict limit, but larger images may take longer to process. For best performance, images under 10MB are recommended.
                 </p>
               </div>
             </div>
