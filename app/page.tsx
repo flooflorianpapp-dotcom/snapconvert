@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import { UnifiedHeader } from "@/components/unified-header"
 import { Hero } from "@/components/hero"
 import { HowItWorks } from "@/components/how-it-works"
