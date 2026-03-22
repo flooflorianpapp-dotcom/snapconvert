@@ -48,6 +48,7 @@ const curatedTools = {
 export function UnifiedHeader() {
   const [isToolsOpen, setIsToolsOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false)
 
   // Disable body scroll when mobile menu is open
   useEffect(() => {
@@ -168,67 +169,87 @@ export function UnifiedHeader() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden fixed inset-0 top-16 z-40 bg-background border-t border-border overflow-y-auto overscroll-contain">
-          <div className="px-4 py-4 space-y-5 pb-20">
-            {categories.map((category) => {
-              const IconComponent = category.icon
-              return (
-                <div key={category.title}>
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <IconComponent className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-xs font-semibold text-foreground uppercase tracking-wide">
-                      {category.title}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                    {category.tools.map((tool) => (
-                      <a
-                        key={tool.href}
-                        href={tool.href}
-                        className="py-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {tool.name}
-                      </a>
-                    ))}
-                  </div>
+          <div className="px-4 py-4 space-y-1 pb-20">
+            {/* Tools Expandable Section */}
+            <div>
+              <button
+                onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
+                className="flex items-center justify-between w-full py-3 text-sm text-foreground"
+                type="button"
+              >
+                <span>Tools</span>
+                <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${isMobileToolsOpen ? "rotate-180" : ""}`} />
+              </button>
+              
+              {isMobileToolsOpen && (
+                <div className="pl-4 pb-4 space-y-4">
+                  {categories.map((category) => {
+                    const IconComponent = category.icon
+                    return (
+                      <div key={category.title}>
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <IconComponent className="h-3.5 w-3.5 text-primary" />
+                          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                            {category.title}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                          {category.tools.map((tool) => (
+                            <a
+                              key={tool.href}
+                              href={tool.href}
+                              className="py-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                              onClick={() => {
+                                setIsMobileMenuOpen(false)
+                                setIsMobileToolsOpen(false)
+                              }}
+                            >
+                              {tool.name}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })}
+                  
+                  <a
+                    href="/tools"
+                    className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors pt-2"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false)
+                      setIsMobileToolsOpen(false)
+                    }}
+                  >
+                    View All Tools
+                    <ArrowRight className="h-4 w-4" />
+                  </a>
                 </div>
-              )
-            })}
-            
-            <div className="border-t border-border pt-4">
-              <a
-                href="/tools"
-                className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                View All Tools
-                <ArrowRight className="h-4 w-4" />
-              </a>
+              )}
             </div>
             
-            <div className="border-t border-border pt-4 space-y-2">
-              <a
-                href="/#how-it-works"
-                className="block text-sm text-muted-foreground hover:text-foreground"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                How It Works
-              </a>
-              <a
-                href="/#why-snapconvert"
-                className="block text-sm text-muted-foreground hover:text-foreground"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Why Us
-              </a>
-              <a
-                href="/#faq"
-                className="block text-sm text-muted-foreground hover:text-foreground"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                FAQ
-              </a>
-            </div>
+            <div className="border-t border-border" />
+            
+            <a
+              href="/#how-it-works"
+              className="block py-3 text-sm text-muted-foreground hover:text-foreground"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              How It Works
+            </a>
+            <a
+              href="/#why-snapconvert"
+              className="block py-3 text-sm text-muted-foreground hover:text-foreground"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Why Us
+            </a>
+            <a
+              href="/#faq"
+              className="block py-3 text-sm text-muted-foreground hover:text-foreground"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              FAQ
+            </a>
           </div>
         </div>
       )}
