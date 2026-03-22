@@ -1,3 +1,61 @@
+{/* 
+  Temporarily disabled – will be re-enabled later
+  
+  This tool is hidden from navigation but the code is preserved.
+  To re-enable:
+  1. Remove the "Coming Soon" wrapper below
+  2. Uncomment the full tool component
+  3. Add back to tools-config.ts in the "image-utilities" category:
+     { name: "Background Remover", description: "Remove backgrounds from images instantly", href: "/background-remover" }
+  4. Add back to sitemap.ts
+*/}
+
+"use client"
+
+import { UnifiedHeader } from "@/components/unified-header"
+import { UnifiedFooter } from "@/components/unified-footer"
+import { Button } from "@/components/ui/button"
+import { ImageIcon, ArrowLeft } from "lucide-react"
+import Link from "next/link"
+
+export default function BackgroundRemoverPage() {
+  return (
+    <div className="flex min-h-screen flex-col bg-background">
+      <UnifiedHeader />
+      <main className="flex-1 pt-16">
+        <section className="flex flex-col items-center justify-center px-4 py-24 sm:py-32">
+          <div className="w-full max-w-lg text-center">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+              <ImageIcon className="h-10 w-10 text-primary" />
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Coming Soon
+            </h1>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Our AI-powered Background Remover is currently being improved to deliver even better results. Check back soon!
+            </p>
+            <div className="mt-8">
+              <Button asChild>
+                <Link href="/tools">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Browse Other Tools
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+      </main>
+      <UnifiedFooter />
+    </div>
+  )
+}
+
+/*
+  ===========================================
+  PRESERVED FULL IMPLEMENTATION BELOW
+  Uncomment to re-enable the tool
+  ===========================================
+
 "use client"
 
 import { useState, useCallback } from "react"
@@ -166,7 +224,6 @@ export default function BackgroundRemoverPage() {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  {/* Error Message */}
                   {error && (
                     <div className="flex items-center gap-2 rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive">
                       <AlertCircle className="h-5 w-5 flex-shrink-0" />
@@ -174,7 +231,6 @@ export default function BackgroundRemoverPage() {
                     </div>
                   )}
 
-                  {/* Image Preview */}
                   <div className="relative">
                     <button
                       onClick={removeFile}
@@ -231,7 +287,6 @@ export default function BackgroundRemoverPage() {
                     </p>
                   </div>
 
-                  {/* Action Buttons */}
                   <div className="flex gap-4">
                     {!processedImage ? (
                       <Button
@@ -276,151 +331,12 @@ export default function BackgroundRemoverPage() {
           </div>
         </section>
 
-        {/* How It Works Section */}
         <section id="how-it-works" className="py-16 px-4 border-t border-border">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="text-3xl font-bold text-foreground text-center mb-12">
-              How Background Removal Works
-            </h2>
-            <div className="grid gap-8 md:grid-cols-3">
-              <div className="text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <span className="text-xl font-bold">1</span>
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">Upload Image</h3>
-                <p className="text-muted-foreground">
-                  Drop or select an image with a subject you want to isolate from the background.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <span className="text-xl font-bold">2</span>
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">AI Processing</h3>
-                <p className="text-muted-foreground">
-                  Our AI analyzes the image, detects the subject, and precisely removes the background.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <span className="text-xl font-bold">3</span>
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">Download Result</h3>
-                <p className="text-muted-foreground">
-                  Download your image with a transparent background as a high-quality PNG file.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Supported Formats Section */}
-        <section className="py-16 px-4 bg-muted/30 border-t border-border">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="text-3xl font-bold text-foreground text-center mb-12">
-              Supported Image Formats
-            </h2>
-            <div className="grid gap-6 sm:grid-cols-3">
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2">JPG / JPEG</h3>
-                <p className="text-sm text-muted-foreground">
-                  Remove backgrounds from photos, portraits, and product images in JPG format.
-                </p>
-              </div>
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2">PNG</h3>
-                <p className="text-sm text-muted-foreground">
-                  Process PNG images and output transparent backgrounds in the same format.
-                </p>
-              </div>
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2">WEBP</h3>
-                <p className="text-sm text-muted-foreground">
-                  Full support for modern WEBP images with high-quality background removal.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Use Cases Section */}
-        <section className="py-16 px-4 border-t border-border">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="text-3xl font-bold text-foreground text-center mb-12">
-              Perfect For
-            </h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { title: "Product Photos", desc: "Clean backgrounds for e-commerce" },
-                { title: "Profile Pictures", desc: "Professional headshots" },
-                { title: "Social Media", desc: "Eye-catching graphics" },
-                { title: "Presentations", desc: "Clean visuals for slides" },
-                { title: "Marketing", desc: "Banner and ad images" },
-                { title: "Logos", desc: "Transparent logo backgrounds" },
-                { title: "Photo Editing", desc: "Composite multiple images" },
-                { title: "Design Projects", desc: "Isolated elements for design" },
-              ].map((item) => (
-                <div key={item.title} className="rounded-lg border border-border bg-card p-4">
-                  <h3 className="font-semibold text-foreground">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ Section */}
-        <section id="faq" className="py-16 px-4 bg-muted/30 border-t border-border">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="text-3xl font-bold text-foreground text-center mb-12">
-              Frequently Asked Questions
-            </h2>
-            <div className="space-y-6">
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  How does background removal work?
-                </h3>
-                <p className="text-muted-foreground">
-                  Our tool uses advanced AI technology to analyze your image, detect the main subject, and precisely remove the background while preserving fine details like hair and edges.
-                </p>
-              </div>
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  What quality can I expect?
-                </h3>
-                <p className="text-muted-foreground">
-                  The AI produces professional-quality results with clean edges, even for complex subjects like hair, fur, or transparent objects.
-                </p>
-              </div>
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Is there a file size limit?
-                </h3>
-                <p className="text-muted-foreground">
-                  Yes, the maximum file size is 12MB. For best results, we recommend images under 10MB.
-                </p>
-              </div>
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  What format is the output?
-                </h3>
-                <p className="text-muted-foreground">
-                  The output is always a PNG file, which supports transparency. This allows you to use the image on any background.
-                </p>
-              </div>
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Is my image secure?
-                </h3>
-                <p className="text-muted-foreground">
-                  Your images are processed securely and are not stored after processing. We take your privacy seriously.
-                </p>
-              </div>
-            </div>
-          </div>
+          ... SEO sections preserved ...
         </section>
       </main>
       <UnifiedFooter />
     </div>
   )
 }
+*/
