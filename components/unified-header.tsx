@@ -53,29 +53,22 @@ export function UnifiedHeader() {
   // Disable body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
-      // Save current scroll position and disable scroll
+      // Simple overflow hidden - avoid position:fixed which breaks touch on iOS
+      const scrollY = window.scrollY
       document.body.style.overflow = 'hidden'
-      document.body.style.position = 'fixed'
-      document.body.style.top = `-${window.scrollY}px`
-      document.body.style.width = '100%'
+      document.body.dataset.scrollY = String(scrollY)
     } else {
-      // Restore scroll position
-      const scrollY = document.body.style.top
+      // Restore scroll
       document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.width = ''
+      const scrollY = document.body.dataset.scrollY
       if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1)
+        window.scrollTo(0, parseInt(scrollY))
+        delete document.body.dataset.scrollY
       }
     }
 
     return () => {
-      // Cleanup on unmount
       document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.width = ''
     }
   }, [isMobileMenuOpen])
 
@@ -168,8 +161,11 @@ export function UnifiedHeader() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-16 z-40 bg-background border-t border-border overflow-y-auto overscroll-contain">
-          <div className="px-4 py-4 space-y-1 pb-20">
+        <div 
+          className="md:hidden fixed left-0 right-0 top-16 bottom-0 z-50 bg-background border-t border-border overflow-y-auto overscroll-contain"
+          style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+        >
+          <div className="px-4 py-4 space-y-1 pb-24">
             {/* Tools Expandable Section */}
             <div>
               <button
